@@ -1,0 +1,9 @@
+Depends on antlr-4.7.2-complete.jar
+
+Available from:
+
+https://www.antlr.org/download/index.html
+
+
+javac *.java
+java minijava.MiniJavaMain "C:\Path\to\tests\testFile.java"

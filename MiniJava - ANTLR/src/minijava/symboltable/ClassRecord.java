@@ -1,31 +1,41 @@
 package minijava.symboltable;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class ClassRecord extends Record {
-	private List<MethodRecord> methods;
-	private List<VarRecord> localVars;
+	private Map<String, MethodRecord> methods;
+	private Map<String, VarRecord> globalVars;
 
 	public ClassRecord(String id, String type) {
 		super(id, type);
-		methods = new ArrayList<>();
-		localVars = new ArrayList<>();
+		methods = new HashMap<>();
+		globalVars = new HashMap<>();
 	}
 
-	public List<MethodRecord> getMethods() {
-		return this.methods;
+	public Map<String, MethodRecord> getMethods() {
+		return methods;
 	}
 
-	public List<VarRecord> getLocalVars() {
-		return this.localVars;
+	public Map<String, VarRecord> getLocalVars() {
+		return globalVars;
 	}
 
-	public void setMethods(List<MethodRecord> newMethods) {
+	public void setMethods(Map<String, MethodRecord> newMethods) {
 		methods = newMethods;
 	}
 
-	public void setLocalVars(List<VarRecord> newLocalVars) {
-		localVars = newLocalVars;
+	public void setLocalVars(Map<String, VarRecord> newLocalVars) {
+		globalVars = newLocalVars;
 	}
+
+	public void pushLocalVar(String key, VarRecord localVar) {
+		globalVars.put(key, localVar);
+	}
+
+	// Check for overloading method
+	public void pushMethod(String key, MethodRecord method) {
+		methods.put(key, method);
+	}
+
 }

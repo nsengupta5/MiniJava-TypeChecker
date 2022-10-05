@@ -10,7 +10,7 @@ public class SymbolTable {
 
 	public SymbolTable() {
 		this.scopes = new ArrayList<>();
-		this.currScopeIndex = 0;
+		this.currScopeIndex = -1;
 	}
 
 	public void pushScope(Scope newScope) {
@@ -20,15 +20,14 @@ public class SymbolTable {
 
 	public Scope popScope() {
 		if (scopes.isEmpty()) {
-			System.out.print("No scopes");
+			return null;
 		}
-		else {
-			scopes.remove(currScopeIndex - 1);
-		}
+
+		return scopes.remove(currScopeIndex--);
 	}
 
 	public void addRecord(String key, Record record) {
-		scopes.get(currScopeIndex).addRecord(key, record);
+		scopes.get(currScopeIndex).pushRecord(key, record);
 	}
 
 	public Record getRecord(String key) {
@@ -37,8 +36,25 @@ public class SymbolTable {
 			if (currScopeRecords.containsKey(key)) {
 				return currScopeRecords.get(key);
 			}
-		}	
+		}
 		return null;
+	}
+
+	public void setScopes(List<Scope> newScopes) {
+		scopes = newScopes;
+	}
+
+	public List<Scope> getScopes() {
+		return scopes;
+	}
+
+	public void setCurrentScope(Scope newScope) {
+		scopes.remove(currScopeIndex);
+		scopes.add(newScope);
+	}
+
+	public Scope getCurrentScope() {
+		return scopes.get(currScopeIndex);
 	}
 }
 

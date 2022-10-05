@@ -1,39 +1,43 @@
 package minijava.symboltable;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class MethodRecord extends Record {
-	private List<VarRecord> parameters;
-	private List<VarRecord> localVars;
+	private Map<String, VarRecord> parameters;
+	private Map<String, VarRecord> localVars;
 
 	public MethodRecord(String id, String type) {
 		super(id, type);
-		parameters = new ArrayList<>();
-		localVars = new ArrayList<>();
+		parameters = new HashMap<>();
+		localVars = new HashMap<>();
 	}
 
-	public List<VarRecord> getParameters() {
+	public Map<String, VarRecord> getParameters() {
 		return parameters;
 	}
 
-	public List<VarRecord> getLocalVars() {
+	public Map<String, VarRecord> getLocalVars() {
 		return localVars;
 	}
 
-	public void setParameters(List<VarRecord> newParams) {
+	public void setParameters(Map<String, VarRecord> newParams) {
 		parameters = newParams;
 	}
 
-	public void setLocalVars(List<VarRecord> newLocalVars) {
+	public void setLocalVars(Map<String, VarRecord> newLocalVars) {
 		localVars = newLocalVars;
 	}
 
-	public void pushParameter(VarRecord newParam) {
-		parameters.add(newParam);
+	public void pushParameter(String key, VarRecord newParam) {
+		parameters.put(key, newParam);
 	}
 
-	public void pushLocalVar(VarRecord newLocalVar) {
-		localVars.add(newLocalVar);
+	public void pushLocalVar(String key, VarRecord newLocalVar) {
+		localVars.put(key, newLocalVar);
+	}
+
+	public VarRecord getLocalVar(String id) {
+		return localVars.get(id);
 	}
 }

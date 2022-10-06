@@ -4,6 +4,8 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import minijava.symboltable.*;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Vector;
 
 public class MiniJavaListener extends MiniJavaGrammarBaseListener {
@@ -19,6 +21,9 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         System.exit(-1);
     }
 
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
+    }
 
     public MiniJavaListener(MiniJavaGrammarParser parse) {
         symbolTable = new SymbolTable();
@@ -37,6 +42,7 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
     public void exitProgram(MiniJavaGrammarParser.ProgramContext ctx) {
         if (debugging) System.out.println("Exited program");
         symbolTable.popScope();
+        if (debugging) symbolTable.printSymbolTable();
     }
 
     @Override
@@ -44,7 +50,9 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         if (debugging) System.out.println("Entered main class");
         String id = ctx.ID(0).toString();
         String type = ctx.CLASS().toString();
-        currClass = new ClassRecord(id, type);
+        ClassRecord mainClass = new ClassRecord(id, type);
+        symbolTable.addClassToProgram(id, mainClass);
+        currClass = mainClass;
         Scope mainScope = new Scope(id, "class");
         mainScope.setParent(symbolTable.getCurrentScope());
         mainScope.setScopeClass(currClass);
@@ -68,7 +76,12 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         if (symbolTable.getRecord(id) != null) {
             System.out.println("Class name already exists");
         }
-        currClass = new ClassRecord(id, type);
+        ClassRecord newClass = new ClassRecord(id, type);
+        if (ctx.EXTENDS() != null) {
+            newClass.setParentClass(new ClassRecord(ctx.ID(1).toString(), ctx.CLASS().toString()));
+        }
+        symbolTable.addClassToProgram(id, newClass);
+        currClass = newClass;
         Scope classScope = new Scope(id, "class");
         classScope.setParent(symbolTable.getCurrentScope());
         classScope.setScopeClass(currClass);
@@ -82,23 +95,36 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         if (debugging) System.out.println("Exited class declaration");
         symbolTable.popScope();
     }
-
     //
     @Override
     public void enterVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
         if (debugging) System.out.println("Entered variable declaration");
-        String id = "";
-        String type = "";
-        if (symbolTable.getRecord(id) != null) {
-            System.out.println("Variable already exists");
+        String id, type;
+        id = ctx.ID().toString();
+        if (ctx.type().BOOLEAN() != null) {
+            type = ctx.type().BOOLEAN().toString();
+        }
+        else if (ctx.type().INT() != null) {
+            type = ctx.type().INT().toString();
+        }
+        else if (ctx.type().LSQUARE() != null) {
+            type = ctx.type().LSQUARE().toString();
+        }
+        else {
+            type = ctx.type().ID().toString();
         }
         VarRecord newVar = new VarRecord(id, type);
         if (symbolTable.getCurrentScope().getType().equals("method")) {
-            currMethod.pushLocalVar(id, newVar);
+            if (symbolTable.getCurrentScope().getRecords().get(id) != null) {
+                currMethod.pushLocalVar(id, newVar);
+            }
         }
         else {
-            currClass.pushLocalVar(id, newVar);
+            currClass.pushGlobalVar(id, newVar);
         }
+        Scope varScope = new Scope(id, "variable");
+        varScope.setParent(symbolTable.getCurrentScope());
+        symbolTable.pushScope(varScope);
         symbolTable.addRecord(id, newVar);
     }
 
@@ -106,6 +132,7 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
     @Override
     public void exitVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
         if (debugging) System.out.println("Exited variable declaration");
+        symbolTable.popScope();
     }
 
     //
@@ -120,11 +147,12 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         else if (ctx.type().INT() != null) {
             type = ctx.type().INT().toString();
         }
-        // NEED TO FIX URGENT
-        else {
-            type = "int arr";
+        else if (ctx.type().LSQUARE() != null) {
+            type = ctx.type().LSQUARE().toString();
         }
-        System.out.println(type);
+        else {
+            type = ctx.type().ID().toString();
+        }
         currMethod = new MethodRecord(id, type);
         currClass.pushMethod(id, currMethod);
         Scope methodScope = new Scope(id, "method");
@@ -145,25 +173,73 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
     @Override
     public void enterFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
         if (debugging) System.out.println("Entered formal list");
+        String id, type;
+        id = ctx.ID().toString();
+        if (ctx.type().BOOLEAN() != null) {
+            type = ctx.type().BOOLEAN().toString();
+        }
+        else if (ctx.type().INT() != null) {
+            type = ctx.type().INT().toString();
+        }
+        else if (ctx.type().LSQUARE() != null) {
+            type = ctx.type().LSQUARE().toString();
+        }
+        else {
+            type = ctx.type().ID().toString();
+        }
+        if (symbolTable.getRecord(id) != null) {
+            System.out.println("Variable already exists");
+        }
+        VarRecord newVar = new VarRecord(id, type);
+        currMethod.pushParameter(id, newVar);
+        Scope paramScope = new Scope(id, "param");
+        paramScope.setParent(symbolTable.getCurrentScope());
+        symbolTable.pushScope(paramScope);
+        symbolTable.addRecord(id, newVar);
     }
 
     //
     @Override
     public void exitFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
         if (debugging) System.out.println("Exited formal list");
+        symbolTable.popScope();
     }
 
     //
     @Override
     public void enterFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
-
+        if (debugging) System.out.println("Entered formal list");
+        String id, type;
+        id = ctx.ID().toString();
+        if (ctx.type().BOOLEAN() != null) {
+            type = ctx.type().BOOLEAN().toString();
+        }
+        else if (ctx.type().INT() != null) {
+            type = ctx.type().INT().toString();
+        }
+        else if (ctx.type().LSQUARE() != null) {
+            type = ctx.type().LSQUARE().toString();
+        }
+        else {
+            type = ctx.type().ID().toString();
+        }
+        if (symbolTable.getRecord(id) != null) {
+            System.out.println("Variable already exists");
+        }
+        VarRecord newVar = new VarRecord(id, type);
+        currMethod.pushParameter(id, newVar);
+        Scope paramScope = new Scope(id, "param");
+        paramScope.setParent(symbolTable.getCurrentScope());
+        symbolTable.pushScope(paramScope);
+        symbolTable.addRecord(id, newVar);
     }
 
 
     //
     @Override
     public void exitFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
-        System.out.println("exitFormalrest");
+        if (debugging) System.out.println("exitFormalrest");
+        symbolTable.popScope();
     }
 
     //

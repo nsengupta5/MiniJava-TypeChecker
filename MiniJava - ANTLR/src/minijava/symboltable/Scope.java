@@ -2,6 +2,7 @@ package minijava.symboltable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
 
 public class Scope extends Record {
 	private Scope parent;
@@ -41,5 +42,20 @@ public class Scope extends Record {
 
 	public void setRecords(Map<String, Record> newRecords) {
 		records = newRecords;
+	}
+
+	public String toString() {
+		if (parent == null) {
+			return this.getId() + " " + this.getType() + "\n";
+		}
+		StringBuilder sb = new StringBuilder();
+		Iterator<Map.Entry<String, Record>> itr = records.entrySet().iterator();
+		Map.Entry<String, Record> entry = null;
+		while (itr.hasNext()) {
+			entry = itr.next();
+			sb.append(this.getId() + " " + this.getType() + " " + entry.getValue().getType() + " " + this.parent.getId());
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 }

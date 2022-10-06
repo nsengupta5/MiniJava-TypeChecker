@@ -6,6 +6,7 @@ import java.util.HashMap;
 public class ClassRecord extends Record {
 	private Map<String, MethodRecord> methods;
 	private Map<String, VarRecord> globalVars;
+	private ClassRecord parentClass;
 
 	public ClassRecord(String id, String type) {
 		super(id, type);
@@ -13,11 +14,19 @@ public class ClassRecord extends Record {
 		globalVars = new HashMap<>();
 	}
 
+	public void setParentClass(ClassRecord parentClass) {
+		this.parentClass = parentClass;
+	}
+
+	public ClassRecord getParentClass() {
+		return parentClass;
+	}
+
 	public Map<String, MethodRecord> getMethods() {
 		return methods;
 	}
 
-	public Map<String, VarRecord> getLocalVars() {
+	public Map<String, VarRecord> getGlobalVars() {
 		return globalVars;
 	}
 
@@ -25,11 +34,11 @@ public class ClassRecord extends Record {
 		methods = newMethods;
 	}
 
-	public void setLocalVars(Map<String, VarRecord> newLocalVars) {
-		globalVars = newLocalVars;
+	public void setGlobalVars(Map<String, VarRecord> newGlobalVars) {
+		globalVars = newGlobalVars;
 	}
 
-	public void pushLocalVar(String key, VarRecord localVar) {
+	public void pushGlobalVar(String key, VarRecord localVar) {
 		globalVars.put(key, localVar);
 	}
 

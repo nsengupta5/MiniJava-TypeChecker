@@ -35,6 +35,10 @@ public class MiniJavaMain {
 
         walker.walk(typecheck, tree);
 
+        VerifierListener verifier = new VerifierListener(typecheck.getSymbolTable());
+
+        walker.walk(verifier, tree);
+
     }
 
 

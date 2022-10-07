@@ -42,7 +42,7 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
     public void exitProgram(MiniJavaGrammarParser.ProgramContext ctx) {
         if (debugging) System.out.println("Exited program");
         symbolTable.popScope();
-        if (debugging) symbolTable.printSymbolTable();
+        // if (debugging) symbolTable.printSymbolTable();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         }
         ClassRecord newClass = new ClassRecord(id, type);
         if (ctx.EXTENDS() != null) {
-            newClass.setParentClass(new ClassRecord(ctx.ID(1).toString(), ctx.CLASS().toString()));
+            newClass.setParentClass(ctx.ID(1).toString());
         }
         symbolTable.addClassToProgram(id, newClass);
         currClass = newClass;
@@ -115,7 +115,7 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         }
         VarRecord newVar = new VarRecord(id, type);
         if (symbolTable.getCurrentScope().getType().equals("method")) {
-            if (symbolTable.getCurrentScope().getRecords().get(id) != null) {
+            if (symbolTable.getCurrentScope().getRecords().get(id) == null) {
                 currMethod.pushLocalVar(id, newVar);
             }
         }
@@ -238,32 +238,28 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
     //
     @Override
     public void exitFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
-        if (debugging) System.out.println("exitFormalrest");
+        if (debugging) System.out.println("Exited Formal Rest");
         symbolTable.popScope();
     }
 
     //
     @Override
     public void enterType(MiniJavaGrammarParser.TypeContext ctx) {
-
     }
 
     @Override
     public void exitType(MiniJavaGrammarParser.TypeContext ctx) {
-        // System.out.println("exitType");
     }
 //
 
-
     @Override
     public void enterStatement(MiniJavaGrammarParser.StatementContext ctx) {
-
+        if (debugging) System.out.println("Entered statement");
     }
-
 
     @Override
     public void exitExpr(MiniJavaGrammarParser.ExprContext ctx) {
-        //  System.out.println("exitExpr");
+        if (debugging) System.out.println("Exited expression");
     }
 
     @Override

@@ -23,4 +23,5 @@ public class Program extends Record {
     public void pushClass(String key, ClassRecord newClass) {
         classes.put(key, newClass);
     }
+
 }

@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class ClassRecord extends Record {
 	private Map<String, MethodRecord> methods;
 	private Map<String, VarRecord> globalVars;
-	private ClassRecord parentClass;
+	private String parentClassId;
 
 	public ClassRecord(String id, String type) {
 		super(id, type);
@@ -14,12 +14,12 @@ public class ClassRecord extends Record {
 		globalVars = new HashMap<>();
 	}
 
-	public void setParentClass(ClassRecord parentClass) {
-		this.parentClass = parentClass;
+	public void setParentClass(String parentClassId) {
+		this.parentClassId = parentClassId;
 	}
 
-	public ClassRecord getParentClass() {
-		return parentClass;
+	public String getParentClassId() {
+		return parentClassId;
 	}
 
 	public Map<String, MethodRecord> getMethods() {

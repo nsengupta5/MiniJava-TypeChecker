@@ -4,16 +4,13 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import minijava.symboltable.*;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Vector;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 public class VerifierListener extends MiniJavaGrammarBaseListener {
     private SymbolTable symbolTable;
     private boolean debugging = true;
     private Map<String, ClassRecord> classes;
+    private Stack<String> typeChecker;
 
     public void printError(String error) {
         System.err.println(error);
@@ -23,6 +20,7 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
     public VerifierListener(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
         classes = symbolTable.getProgram().getClasses();
+        typeChecker = new Stack<>();
     }
 
     public VarRecord findVariable(String id) {
@@ -143,25 +141,38 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
 
     @Override
     public void enterStatement(MiniJavaGrammarParser.StatementContext ctx) {
-       if (debugging) System.out.println(ctx.ID());
-       String varType = "";
-       if (ctx.ID() != null) {
-           VarRecord v = findVariable(ctx.ID().toString());
-           if (v != null) {
-              String vType = v.getType();
-              if (vType.equals("int")) {
-                  if (ctx.expr(0).INTEGER() == null) {
-                     printError("Invalid assignment to variable " + ctx.ID());
-                  }
-              }
-           }
-       }
+//       if (debugging) System.out.println(ctx.ID());
+//       String varType = "";
+//       if (ctx.ID() != null) {
+//           VarRecord v = findVariable(ctx.ID().toString());
+//           if (v != null) {
+//              String vType = v.getType();
+//              if (vType.equals("int")) {
+//                  if (ctx.expr(0).INTEGER() == null) {
+//                     printError("Invalid assignment to variable " + ctx.ID());
+//                  }
+//              }
+//           }
+//       }
     }
-
 
     @Override
     public void exitExpr(MiniJavaGrammarParser.ExprContext ctx) {
-        //  System.out.println("exitExpr");
+        if (ctx.op() != null) {
+            String s1 = typeChecker.pop();
+            String s2 = typeChecker.pop();
+            if (ctx.op().PLUS() != null || ctx.op().MUL() != null || ctx.op().MINUS() != null) {
+                if (!(s1.equals("int") && s2.equals("int"))) {
+                    printError("BOTH NOT INTEGERS");
+                }
+            }
+        }
+        if (ctx.INTEGER() != null) {
+            typeChecker.push("int");
+        }
+        else if (ctx.FALSE() != null || ctx.TRUE() != null) {
+            typeChecker.push("bool");
+        }
     }
 
     @Override

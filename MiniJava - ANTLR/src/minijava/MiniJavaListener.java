@@ -14,7 +14,7 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
     private ClassRecord currClass;
     private MethodRecord currMethod;
 
-    private boolean debugging = true;
+    private boolean debugging = false;
 
     public void printError(String error) {
         System.err.println(error);
@@ -42,7 +42,7 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
     public void exitProgram(MiniJavaGrammarParser.ProgramContext ctx) {
         if (debugging) System.out.println("Exited program");
         symbolTable.popScope();
-        // if (debugging) symbolTable.printSymbolTable();
+        symbolTable.printSymbolTable();
     }
 
     @Override

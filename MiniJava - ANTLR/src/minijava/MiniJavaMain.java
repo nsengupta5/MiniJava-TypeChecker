@@ -4,7 +4,6 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Vector;
 
 public class MiniJavaMain {
 
@@ -31,17 +30,21 @@ public class MiniJavaMain {
 
         ParseTreeWalker walker = new ParseTreeWalker();
 
-        MiniJavaListener typecheck = new MiniJavaListener(parser);
+        SymbolTableBuilder sbBuilder = new SymbolTableBuilder(parser);
 
-        walker.walk(typecheck, tree);
+        walker.walk(sbBuilder, tree);
 
-        InheritanceListener inheritance = new InheritanceListener(typecheck.getSymbolTable());
+        InheritanceListener inheritance = new InheritanceListener(sbBuilder.getSymbolTable());
 
         walker.walk(inheritance, tree);
 
-        VerifierListener verifier = new VerifierListener(inheritance.getSymbolTable());
+        ScopeCheckingStatements verifier = new ScopeCheckingStatements(inheritance.getSymbolTable());
 
         walker.walk(verifier, tree);
+
+//        TypeChecker typecheck = new TypeChecker(verifier.getSymbolTable());
+//
+//        walker.walk(typecheck, tree);
 
     }
 

@@ -1,16 +1,9 @@
 package minijava;
 
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import minijava.symboltable.*;
 
-import java.util.*;
-
-public class VerifierListener extends MiniJavaGrammarBaseListener {
+public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
     private SymbolTable symbolTable;
-    private boolean debugging = true;
-    private Map<String, ClassRecord> classes;
-    private Stack<String> typeChecker;
     private ClassRecord currentClass;
     private MethodRecord currentMethod;
 
@@ -19,49 +12,12 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
         System.exit(-1);
     }
 
-    public VerifierListener(SymbolTable symbolTable) {
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
+    }
+
+    public ScopeCheckingStatements(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
-        classes = symbolTable.getProgram().getClasses();
-        typeChecker = new Stack<>();
-    }
-
-    public VarRecord findVariable(String id) {
-       for (Map.Entry<String, ClassRecord> c : classes.entrySet()) {
-           Map<String, VarRecord> globalVars = c.getValue().getGlobalVars();
-           for (Map.Entry<String, VarRecord> g : globalVars.entrySet()) {
-               if (g.getValue().getId().equals(id)) {
-                   return g.getValue();
-               }
-           }
-           Map<String, MethodRecord> methods = c.getValue().getMethods();
-           for (Map.Entry<String, MethodRecord> m : methods.entrySet()) {
-               Map<String, VarRecord> params = m.getValue().getParameters();
-               for (Map.Entry<String, VarRecord> p : params.entrySet()) {
-                   if (p.getValue().getId().equals(id)) {
-                       return p.getValue();
-                   }
-               }
-               Map<String, VarRecord> localVars = m.getValue().getLocalVars();
-               for (Map.Entry<String, VarRecord> l : localVars.entrySet()) {
-                   if (l.getValue().getId().equals(id)) {
-                       return l.getValue();
-                   }
-               }
-           }
-       }
-       return null;
-    }
-
-    public MethodRecord findMethod(String id) {
-        for (Map.Entry<String, ClassRecord> c : classes.entrySet()) {
-            Map<String, MethodRecord> methods = c.getValue().getMethods();
-            for (Map.Entry<String, MethodRecord> m : methods.entrySet()) {
-               if (m.getValue().getId().equals(id)) {
-                   return m.getValue();
-               }
-            }
-        }
-        return null;
     }
 
     public void exitProgram(MiniJavaGrammarParser.ProgramContext ctx) {
@@ -71,13 +27,13 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
     @Override
     public void enterClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
         String id = ctx.ID(0).toString();
-        currentClass = symbolTable.getProgram().getClasses().get(id);
+        currentClass = symbolTable.findClass(id);
     }
 
     //
     @Override
     public void exitClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
-
+        currentClass = null;
     }
     //
     @Override
@@ -99,18 +55,38 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
     //
     @Override
     public void enterMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
-        currentMethod = findMethod(ctx.ID().toString());
+        currentMethod = symbolTable.findMethod(ctx.ID().toString());
     }
 
     //
     @Override
     public void exitMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
-
+        currentMethod = null;
     }
 
     //
     @Override
     public void enterFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
+        String id, type;
+        id = ctx.ID().toString();
+        if (ctx.type().BOOLEAN() != null) {
+            type = ctx.type().BOOLEAN().toString();
+        }
+        else if (ctx.type().LSQUARE() != null) {
+            type = "int[]";
+        }
+        else if (ctx.type().INT() != null) {
+            type = ctx.type().INT().toString();
+        }
+        else {
+            type = ctx.type().ID().toString();
+        }
+        VarRecord v = currentClass.getGlobalVars().get(id);
+        if (v != null) {
+            if (v.getType().equals(type)) {
+                printError("ERROR: Cannot use global variable within parameter");
+            }
+        }
 
     }
 
@@ -170,7 +146,7 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
         }
 
         if (ctx.ID() != null && ctx.NEW() != null) {
-            if (symbolTable.getProgram().getClasses().get(ctx.ID().toString()) == null) {
+            if (symbolTable.findClass(ctx.ID().toString()) == null) {
                 printError("ERROR: Object does not have class declaration");
             }
         }
@@ -183,7 +159,7 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
             }
             else {
                 if (ctx.expr(0).ID() != null)  {
-                    ClassRecord c = symbolTable.getProgram().getClasses().get(ctx.expr(0).ID().toString());
+                    ClassRecord c = symbolTable.findClass(ctx.expr(0).ID().toString());
                     if (c != null && c.getMethods().get(ctx.ID().toString()) == null) {
                         printError("Object class does not contain given method");
                     }
@@ -191,21 +167,6 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
             }
         }
 
-//        if (ctx.op() != null) {
-//            String s1 = typeChecker.pop();
-//            String s2 = typeChecker.pop();
-//            if (ctx.op().PLUS() != null || ctx.op().MUL() != null || ctx.op().MINUS() != null) {
-//                if (!(s1.equals("int") && s2.equals("int"))) {
-//                    printError("BOTH NOT INTEGERS");
-//                }
-//            }
-//        }
-//        if (ctx.INTEGER() != null) {
-//            typeChecker.push("int");
-//        }
-//        else if (ctx.FALSE() != null || ctx.TRUE() != null) {
-//            typeChecker.push("bool");
-//        }
     }
 
     @Override

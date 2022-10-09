@@ -1,14 +1,8 @@
 package minijava;
 
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import minijava.symboltable.*;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Vector;
-
-public class MiniJavaListener extends MiniJavaGrammarBaseListener {
+public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
     private MiniJavaGrammarParser parser;
     private SymbolTable symbolTable;
     private ClassRecord currClass;
@@ -25,7 +19,7 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         return symbolTable;
     }
 
-    public MiniJavaListener(MiniJavaGrammarParser parse) {
+    public SymbolTableBuilder(MiniJavaGrammarParser parse) {
         symbolTable = new SymbolTable();
         this.parser = parser;
     }
@@ -104,11 +98,11 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         if (ctx.type().BOOLEAN() != null) {
             type = ctx.type().BOOLEAN().toString();
         }
+        else if (ctx.type().LSQUARE() != null) {
+            type = "int[]";
+        }
         else if (ctx.type().INT() != null) {
             type = ctx.type().INT().toString();
-        }
-        else if (ctx.type().LSQUARE() != null) {
-            type = ctx.type().LSQUARE().toString();
         }
         else {
             type = ctx.type().ID().toString();
@@ -116,8 +110,7 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
 
         VarRecord newVar = new VarRecord(id, type);
         if (symbolTable.getCurrentScope().getType().equals("method")) {
-            newVar.setParent(currMethod);
-            if (currMethod.getLocalVar(id) == null) {
+            if (currMethod.getLocalVar(id) == null && currMethod.getParameters().get(id) == null) {
                 currMethod.pushLocalVar(id, newVar);
             }
             else {
@@ -125,7 +118,6 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
             }
         }
         else {
-            newVar.setParent(currClass);
             if (currClass.getGlobalVars().get(id) == null) {
                 currClass.pushGlobalVar(id, newVar);
             }
@@ -155,11 +147,11 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         if (ctx.type().BOOLEAN() != null) {
             type = ctx.type().BOOLEAN().toString();
         }
+        else if (ctx.type().LSQUARE() != null) {
+            type = "int[]";
+        }
         else if (ctx.type().INT() != null) {
             type = ctx.type().INT().toString();
-        }
-        else if (ctx.type().LSQUARE() != null) {
-            type = ctx.type().LSQUARE().toString();
         }
         else {
             type = ctx.type().ID().toString();
@@ -168,7 +160,6 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
             printError("ERROR: Method already defined within class");
         }
         currMethod = new MethodRecord(id, type);
-        currMethod.setParent(currClass);
         currClass.pushMethod(id, currMethod);
         Scope methodScope = new Scope(id, "method");
         methodScope.setParent(symbolTable.getCurrentScope());
@@ -193,11 +184,11 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         if (ctx.type().BOOLEAN() != null) {
             type = ctx.type().BOOLEAN().toString();
         }
+        else if (ctx.type().LSQUARE() != null) {
+            type = "int[]";
+        }
         else if (ctx.type().INT() != null) {
             type = ctx.type().INT().toString();
-        }
-        else if (ctx.type().LSQUARE() != null) {
-            type = ctx.type().LSQUARE().toString();
         }
         else {
             type = ctx.type().ID().toString();
@@ -229,11 +220,11 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         if (ctx.type().BOOLEAN() != null) {
             type = ctx.type().BOOLEAN().toString();
         }
+        else if (ctx.type().LSQUARE() != null) {
+            type = "int[]";
+        }
         else if (ctx.type().INT() != null) {
             type = ctx.type().INT().toString();
-        }
-        else if (ctx.type().LSQUARE() != null) {
-            type = ctx.type().LSQUARE().toString();
         }
         else {
             type = ctx.type().ID().toString();

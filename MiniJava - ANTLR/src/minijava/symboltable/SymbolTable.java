@@ -64,6 +64,49 @@ public class SymbolTable {
 		return scopes.get(currScopeIndex);
 	}
 
+	public ClassRecord findClass(String id) {
+		return program.getClasses().get(id);
+	}
+
+	public VarRecord findVariable(String id) {
+		for (Map.Entry<String, ClassRecord> c : program.getClasses().entrySet()) {
+			Map<String, VarRecord> globalVars = c.getValue().getGlobalVars();
+			for (Map.Entry<String, VarRecord> g : globalVars.entrySet()) {
+				if (g.getValue().getId().equals(id)) {
+					return g.getValue();
+				}
+			}
+			Map<String, MethodRecord> methods = c.getValue().getMethods();
+			for (Map.Entry<String, MethodRecord> m : methods.entrySet()) {
+				Map<String, VarRecord> params = m.getValue().getParameters();
+				for (Map.Entry<String, VarRecord> p : params.entrySet()) {
+					if (p.getValue().getId().equals(id)) {
+						return p.getValue();
+					}
+				}
+				Map<String, VarRecord> localVars = m.getValue().getLocalVars();
+				for (Map.Entry<String, VarRecord> l : localVars.entrySet()) {
+					if (l.getValue().getId().equals(id)) {
+						return l.getValue();
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public MethodRecord findMethod(String id) {
+		for (Map.Entry<String, ClassRecord> c : program.getClasses().entrySet()) {
+			Map<String, MethodRecord> methods = c.getValue().getMethods();
+			for (Map.Entry<String, MethodRecord> m : methods.entrySet()) {
+				if (m.getValue().getId().equals(id)) {
+					return m.getValue();
+				}
+			}
+		}
+		return null;
+	}
+
 	public int getCurrScopeIndex() {
 		return currScopeIndex;
 	}
@@ -77,19 +120,19 @@ public class SymbolTable {
 		for (Map.Entry<String, ClassRecord> c : allClasses.entrySet()) {
 			Map<String, MethodRecord> allMethods = c.getValue().getMethods();
 			Map<String, VarRecord> allGlobalVars = c.getValue().getGlobalVars();
-			System.out.println("CLASS: " + c.getValue().getId() + " " + c.getValue().getType());
+			System.out.println("CLASS: " + c.getValue().getId() + " TYPE: " + c.getValue().getType());
 			for (Map.Entry<String,VarRecord> g : allGlobalVars.entrySet()) {
-				System.out.println("GLOBAL VARIABLE: " + g.getValue().getId() + " " + g.getValue().getType() + " " + c.getValue().getId());
+				System.out.println("		GLOBAL VARIABLE: " + g.getValue().getId() +  " TYPE: " + g.getValue().getType() +  " PARENT: " + c.getValue().getId());
 			}
 			for (Map.Entry<String,MethodRecord> m : allMethods.entrySet()) {
 				Map<String, VarRecord> allParams = m.getValue().getParameters();
 				Map<String, VarRecord> allLocalVars = m.getValue().getLocalVars();
-				System.out.println("METHOD: " + m.getValue().getId() + " " + m.getValue().getType() + " " + c.getValue().getId());
+				System.out.println("		METHOD: " + m.getValue().getId() + " TYPE: " + m.getValue().getType() + " PARENT: " + c.getValue().getId());
 				for (Map.Entry<String, VarRecord> p : allParams.entrySet()) {
-					System.out.println("PARAMETER: : " + p.getValue().getId() + " " + p.getValue().getType() + " " + m.getValue().getId());
+					System.out.println("				PARAMETER: " + p.getValue().getId() + " TYPE: " + p.getValue().getType() + " PARENT: " + m.getValue().getId());
 				}
 				for (Map.Entry<String, VarRecord> l : allLocalVars.entrySet()) {
-					System.out.println("LOCAL VARIABLE: " + l.getValue().getId() + " " + l.getValue().getType() + " " + m.getValue().getId());
+					System.out.println("				LOCAL VARIABLE: " + l.getValue().getId() + " TYPE: " + l.getValue().getType() +  " PARENT: " + m.getValue().getId());
 				}
 			}
 		}

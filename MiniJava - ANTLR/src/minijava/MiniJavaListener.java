@@ -42,7 +42,7 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
     public void exitProgram(MiniJavaGrammarParser.ProgramContext ctx) {
         if (debugging) System.out.println("Exited program");
         symbolTable.popScope();
-        symbolTable.printSymbolTable();
+//        symbolTable.printSymbolTable();
     }
 
     @Override
@@ -73,8 +73,8 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         if (debugging) System.out.println("Entered class declaration");
         String id = ctx.ID(0).toString();
         String type = ctx.CLASS().toString();
-        if (symbolTable.getRecord(id) != null) {
-            System.out.println("Class name already exists");
+        if (symbolTable.getProgram().getClasses().get(id) != null) {
+            printError("ERROR: Class name already exists");
         }
         ClassRecord newClass = new ClassRecord(id, type);
         if (ctx.EXTENDS() != null) {
@@ -113,14 +113,25 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         else {
             type = ctx.type().ID().toString();
         }
+
         VarRecord newVar = new VarRecord(id, type);
         if (symbolTable.getCurrentScope().getType().equals("method")) {
-            if (symbolTable.getCurrentScope().getRecords().get(id) == null) {
+            newVar.setParent(currMethod);
+            if (currMethod.getLocalVar(id) == null) {
                 currMethod.pushLocalVar(id, newVar);
+            }
+            else {
+                printError("ERROR: Variable already declared within method");
             }
         }
         else {
-            currClass.pushGlobalVar(id, newVar);
+            newVar.setParent(currClass);
+            if (currClass.getGlobalVars().get(id) == null) {
+                currClass.pushGlobalVar(id, newVar);
+            }
+            else {
+                printError("ERROR: Global variable already declared within class");
+            }
         }
         Scope varScope = new Scope(id, "variable");
         varScope.setParent(symbolTable.getCurrentScope());
@@ -153,7 +164,11 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         else {
             type = ctx.type().ID().toString();
         }
+        if (currClass.getMethods().get(id) != null) {
+            printError("ERROR: Method already defined within class");
+        }
         currMethod = new MethodRecord(id, type);
+        currMethod.setParent(currClass);
         currClass.pushMethod(id, currMethod);
         Scope methodScope = new Scope(id, "method");
         methodScope.setParent(symbolTable.getCurrentScope());
@@ -187,8 +202,8 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         else {
             type = ctx.type().ID().toString();
         }
-        if (symbolTable.getRecord(id) != null) {
-            System.out.println("Variable already exists");
+        if (currMethod.getParameters().get(id) != null) {
+            printError("Parameter already exists");
         }
         VarRecord newVar = new VarRecord(id, type);
         currMethod.pushParameter(id, newVar);
@@ -223,8 +238,8 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
         else {
             type = ctx.type().ID().toString();
         }
-        if (symbolTable.getRecord(id) != null) {
-            System.out.println("Variable already exists");
+        if (currMethod.getParameters().get(id) != null) {
+            printError("ERROR: Parameter already exists");
         }
         VarRecord newVar = new VarRecord(id, type);
         currMethod.pushParameter(id, newVar);
@@ -254,12 +269,10 @@ public class MiniJavaListener extends MiniJavaGrammarBaseListener {
 
     @Override
     public void enterStatement(MiniJavaGrammarParser.StatementContext ctx) {
-        if (debugging) System.out.println("Entered statement");
     }
 
     @Override
     public void exitExpr(MiniJavaGrammarParser.ExprContext ctx) {
-        if (debugging) System.out.println("Exited expression");
     }
 
     @Override

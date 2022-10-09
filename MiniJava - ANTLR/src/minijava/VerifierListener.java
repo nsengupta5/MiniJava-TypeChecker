@@ -11,6 +11,8 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
     private boolean debugging = true;
     private Map<String, ClassRecord> classes;
     private Stack<String> typeChecker;
+    private ClassRecord currentClass;
+    private MethodRecord currentMethod;
 
     public void printError(String error) {
         System.err.println(error);
@@ -62,15 +64,14 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
         return null;
     }
 
+    public void exitProgram(MiniJavaGrammarParser.ProgramContext ctx) {
+        symbolTable.printSymbolTable();
+    }
     //
     @Override
     public void enterClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
         String id = ctx.ID(0).toString();
-        String type = ctx.CLASS().toString();
-        ClassRecord currClass = symbolTable.getProgram().getClasses().get(id);
-        if (ctx.EXTENDS() != null) {
-            String parentClassId = ctx.ID(1).toString();
-        }
+        currentClass = symbolTable.getProgram().getClasses().get(id);
     }
 
     //
@@ -81,7 +82,13 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
     //
     @Override
     public void enterVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
-
+        String id = ctx.ID().toString();
+        if (ctx.type().ID() != null) {
+            String objectType = ctx.type().ID().toString();
+            if (symbolTable.getProgram().getClasses().get(objectType) == null) {
+                printError("ERROR: Object doesn't exist");
+            }
+        }
     }
 
     //
@@ -92,7 +99,7 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
     //
     @Override
     public void enterMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
-
+        currentMethod = findMethod(ctx.ID().toString());
     }
 
     //
@@ -141,38 +148,64 @@ public class VerifierListener extends MiniJavaGrammarBaseListener {
 
     @Override
     public void enterStatement(MiniJavaGrammarParser.StatementContext ctx) {
-//       if (debugging) System.out.println(ctx.ID());
-//       String varType = "";
-//       if (ctx.ID() != null) {
-//           VarRecord v = findVariable(ctx.ID().toString());
-//           if (v != null) {
-//              String vType = v.getType();
-//              if (vType.equals("int")) {
-//                  if (ctx.expr(0).INTEGER() == null) {
-//                     printError("Invalid assignment to variable " + ctx.ID());
-//                  }
-//              }
-//           }
-//       }
+        if (ctx.ID() != null) {
+            String varName = ctx.ID().toString();
+            if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
+                if (currentClass.getGlobalVars().get(varName) == null) {
+                    printError("ERROR: Variable is not in scope");
+                }
+            }
+        }
     }
 
     @Override
     public void exitExpr(MiniJavaGrammarParser.ExprContext ctx) {
-        if (ctx.op() != null) {
-            String s1 = typeChecker.pop();
-            String s2 = typeChecker.pop();
-            if (ctx.op().PLUS() != null || ctx.op().MUL() != null || ctx.op().MINUS() != null) {
-                if (!(s1.equals("int") && s2.equals("int"))) {
-                    printError("BOTH NOT INTEGERS");
+        if (ctx.ID() != null && ctx.LPAREN() == null && ctx.RPAREN() == null) {
+            String varName = ctx.ID().toString();
+            if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
+                if (currentClass.getGlobalVars().get(varName) == null) {
+                    printError("ERROR: Variable is not in scope");
                 }
             }
         }
-        if (ctx.INTEGER() != null) {
-            typeChecker.push("int");
+
+        if (ctx.ID() != null && ctx.NEW() != null) {
+            if (symbolTable.getProgram().getClasses().get(ctx.ID().toString()) == null) {
+                printError("ERROR: Object does not have class declaration");
+            }
         }
-        else if (ctx.FALSE() != null || ctx.TRUE() != null) {
-            typeChecker.push("bool");
+
+        if (ctx.ID() != null && ctx.DOT() != null) {
+            if (ctx.expr(0).THIS() != null) {
+                if (currentClass.getMethods().get(ctx.ID().toString()) == null) {
+                   printError("ERROR: Current class does not contain given method");
+                }
+            }
+            else {
+                if (ctx.expr(0).ID() != null)  {
+                    ClassRecord c = symbolTable.getProgram().getClasses().get(ctx.expr(0).ID().toString());
+                    if (c != null && c.getMethods().get(ctx.ID().toString()) == null) {
+                        printError("Object class does not contain given method");
+                    }
+                }
+            }
         }
+
+//        if (ctx.op() != null) {
+//            String s1 = typeChecker.pop();
+//            String s2 = typeChecker.pop();
+//            if (ctx.op().PLUS() != null || ctx.op().MUL() != null || ctx.op().MINUS() != null) {
+//                if (!(s1.equals("int") && s2.equals("int"))) {
+//                    printError("BOTH NOT INTEGERS");
+//                }
+//            }
+//        }
+//        if (ctx.INTEGER() != null) {
+//            typeChecker.push("int");
+//        }
+//        else if (ctx.FALSE() != null || ctx.TRUE() != null) {
+//            typeChecker.push("bool");
+//        }
     }
 
     @Override

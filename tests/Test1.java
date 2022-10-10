@@ -8,7 +8,7 @@ class BT {
     Test1 c;
     boolean flag;
     int[] array;
-    public int Start (int x) {
+    public int Start (int y) {
         int x;
         boolean b;
 

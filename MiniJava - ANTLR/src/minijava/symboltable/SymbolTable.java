@@ -45,7 +45,7 @@ public class SymbolTable {
 		return program.getClasses().get(id);
 	}
 
-	public void printSymbolTable() {
+	public void printSymbolTable(){
 		Map<String, ClassRecord> allClasses = program.getClasses();
 		for (Map.Entry<String, ClassRecord> c : allClasses.entrySet()) {
 			Map<String, MethodRecord> allMethods = c.getValue().getMethods();

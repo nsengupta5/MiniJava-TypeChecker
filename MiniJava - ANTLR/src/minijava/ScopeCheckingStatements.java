@@ -61,20 +61,8 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
     //
     @Override
     public void enterFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
-        String id, type;
-        id = ctx.ID().toString();
-        if (ctx.type().BOOLEAN() != null) {
-            type = ctx.type().BOOLEAN().toString();
-        }
-        else if (ctx.type().LSQUARE() != null) {
-            type = "int[]";
-        }
-        else if (ctx.type().INT() != null) {
-            type = ctx.type().INT().toString();
-        }
-        else {
-            type = ctx.type().ID().toString();
-        }
+        String id = ctx.ID().toString();
+        String type = SymbolTableBuilder.getVarType(ctx.type());
         VarRecord v = currentClass.getGlobalVars().get(id);
         if (v != null) {
             if (v.getType().equals(type)) {
@@ -101,7 +89,7 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
             String varName = ctx.ID().toString();
             if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
                 if (currentClass.getGlobalVars().get(varName) == null) {
-                    printError("ERROR: Variable is not in scope");
+                    printError("ERROR: int[] Variable is not in scope");
                 }
             }
         }
@@ -112,7 +100,7 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
         String varName = ctx.ID().toString();
         if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
             if (currentClass.getGlobalVars().get(varName) == null) {
-                printError("ERROR: Variable is not in scope");
+                printError("ERROR: Variable in expression is not in scope");
             }
         }
     }

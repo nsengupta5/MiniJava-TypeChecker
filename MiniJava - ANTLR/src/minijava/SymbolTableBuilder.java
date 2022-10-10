@@ -8,14 +8,12 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
     private ClassRecord currClass;
     private MethodRecord currMethod;
 
-    private boolean debugging = false;
-
     public void printError(String error) {
         System.err.println(error);
         System.exit(-1);
     }
 
-    public String getVarType(MiniJavaGrammarParser.TypeContext ctx) {
+    public static String getVarType(MiniJavaGrammarParser.TypeContext ctx) {
         if (ctx.BOOLEAN() != null) {
             return ctx.BOOLEAN().toString();
         }
@@ -29,7 +27,6 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
             return ctx.ID().toString();
         }
     }
-
     public SymbolTable getSymbolTable() {
         return symbolTable;
     }
@@ -42,20 +39,17 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
     @Override
     public void enterProgram(MiniJavaGrammarParser.ProgramContext ctx) {
         // create a scope for the program
-        if (debugging) System.out.println("Entered program");
         symbolTable.pushScope(new Scope("prog", "program"));
     }
 
 
     @Override
     public void exitProgram(MiniJavaGrammarParser.ProgramContext ctx) {
-        if (debugging) System.out.println("Exited program");
         symbolTable.popScope();
     }
 
     @Override
     public void enterMainclass(MiniJavaGrammarParser.MainclassContext ctx) {
-        if (debugging) System.out.println("Entered main class");
         String id = ctx.ID(0).toString();
         String type = ctx.CLASS().toString();
         ClassRecord mainClass = new ClassRecord(id, type);
@@ -70,13 +64,11 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
 
     @Override
     public void exitMainclass(MiniJavaGrammarParser.MainclassContext ctx) {
-        if (debugging) System.out.println("Exited main class");
         symbolTable.popScope();
     }
 
     @Override
     public void enterClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
-        if (debugging) System.out.println("Entered class declaration");
         String id = ctx.ID(0).toString();
         String type = ctx.CLASS().toString();
         if (symbolTable.getProgram().getClasses().get(id) != null) {
@@ -97,13 +89,11 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
 
     @Override
     public void exitClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
-        if (debugging) System.out.println("Exited class declaration");
         symbolTable.popScope();
     }
 
     @Override
     public void enterVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
-        if (debugging) System.out.println("Entered variable declaration");
         String id = ctx.ID().toString();
         String type = getVarType(ctx.type());
         VarRecord newVar = new VarRecord(id, type);
@@ -131,13 +121,11 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
 
     @Override
     public void exitVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
-        if (debugging) System.out.println("Exited variable declaration");
         symbolTable.popScope();
     }
 
     @Override
     public void enterMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
-        if (debugging) System.out.println("Entered method declaration");
         String id = ctx.ID().toString();
         String type = getVarType(ctx.type());
         if (currClass.getMethods().get(id) != null) {
@@ -154,13 +142,11 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
 
     @Override
     public void exitMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
-        if (debugging) System.out.println("Exited method declaration");
         symbolTable.popScope();
     }
 
     @Override
     public void enterFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
-        if (debugging) System.out.println("Entered formal list");
         String id = ctx.ID().toString();
         String type = getVarType(ctx.type());
         if (currMethod.getParameters().get(id) != null) {
@@ -181,13 +167,11 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
 
     @Override
     public void exitFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
-        if (debugging) System.out.println("Exited formal list");
         symbolTable.popScope();
     }
 
     @Override
     public void enterFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
-        if (debugging) System.out.println("Entered formal list");
         String id = ctx.ID().toString();
         String type = getVarType(ctx.type());
         if (currMethod.getParameters().get(id) != null) {
@@ -202,7 +186,6 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
     }
     @Override
     public void exitFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
-        if (debugging) System.out.println("Exited Formal Rest");
         symbolTable.popScope();
     }
 }

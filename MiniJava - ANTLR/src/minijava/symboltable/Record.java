@@ -1,9 +1,17 @@
 package minijava.symboltable;
 
+/**
+ * Base class Record
+ */
 public class Record {
 	private String id;
 	private String type;
 
+	/**
+	 * Constructor class
+	 * @param id The record's identifier
+	 * @param type The record's type
+	 */
 	public Record(String id, String type) {
 		this.id = id;
 		this.type = type;

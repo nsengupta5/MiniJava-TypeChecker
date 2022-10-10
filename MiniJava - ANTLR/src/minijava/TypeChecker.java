@@ -27,6 +27,22 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
     }
 
     @Override
+    public void exitMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
+        Type s1 = typeChecker.pop();
+        String t;
+        if (s1.getObject() != null) {
+            ClassRecord c = s1.getObject();
+            t = c.getId();
+        }
+        else {
+            t = s1.getRecordType();
+        }
+        if (!currMethod.getType().equals(t)) {
+            System.err.println("ERROR: Invalid return type");
+        }
+    }
+
+    @Override
     public void exitIfElseStmt(MiniJavaGrammarParser.IfElseStmtContext ctx) {
         String s1 = typeChecker.pop().getRecordType();
         if (!s1.equals("boolean")) {
@@ -117,35 +133,43 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
         Type methodType = args.pop();
         if (!methodType.getRecordType().equals("class")) {
             System.err.println("ERROR: Only objects can call methods");
+            // URGENT: NEED TO LOOK AT THIS
             typeChecker.push(new Type("class"));
             return;
         }
 
-        MethodRecord m = methodType.getObject().getMethods().get(ctx.ID().toString());
-        if (m == null) {
-            System.err.println("ERROR: Given class does not contain this method");
-            typeChecker.push(new Type("class"));
-            return;
-        }
-        List<String> params = m.getParamTypes();
-        if (params.size() != args.size()) {
-            System.err.println("ERROR: Method call has invalid number of arguments");
-            typeChecker.push(new Type("class"));
-            return;
-        }
-
-        for (String param : params) {
-            String t = args.pop().getRecordType();
-            if (!t.equals(param)) {
-                System.err.println("ERROR: Argument type not compatible");
-            }
-        }
-
-        if (symbolTable.findClass(m.getType()) != null) {
-            typeChecker.push(new Type(symbolTable.findClass(m.getType())));
+        ClassRecord c = methodType.getObject();
+        if (c == null) {
+            System.err.println("ERROR: Class does not exist");
+            System.exit(-1);
         }
         else {
-            typeChecker.push(new Type(m.getType()));
+            MethodRecord m = c.getMethods().get(ctx.ID().toString());
+            if (m == null) {
+                System.err.println("ERROR: Given class does not contain this method");
+                typeChecker.push(new Type("class"));
+                return;
+            }
+            List<String> params = m.getParamTypes();
+            if (params.size() != args.size()) {
+                System.err.println("ERROR: Method call has invalid number of arguments");
+                typeChecker.push(new Type("class"));
+                return;
+            }
+
+            for (String param : params) {
+                String t = args.pop().getRecordType();
+                if (!t.equals(param)) {
+                    System.err.println("ERROR: Argument type not compatible");
+                }
+            }
+
+            if (symbolTable.findClass(m.getType()) != null) {
+                typeChecker.push(new Type(symbolTable.findClass(m.getType())));
+            }
+            else {
+                typeChecker.push(new Type(m.getType()));
+            }
         }
     }
 
@@ -176,28 +200,22 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
     public void exitArrIndexExpr(MiniJavaGrammarParser.ArrIndexExprContext ctx) {
         String index = typeChecker.pop().getRecordType();
         String arr = typeChecker.pop().getRecordType();
-        if (index.equals("int")) {
-            if (arr.equals("int[]")) {
-                typeChecker.push(new Type("int"));
-            }
-            else {
-                System.err.println("ERROR: Array lookup has to be an integer");
-            }
-        }
-        else {
+        if (!index.equals("int")) {
             System.err.println("ERROR: Index has to be an integer");
         }
+        if (!arr.equals("int[]")) {
+            System.err.println("ERROR: Array lookup has to be an integer");
+        }
+        typeChecker.push(new Type("int"));
     }
 
     @Override
     public void exitArrLengthExpr(MiniJavaGrammarParser.ArrLengthExprContext ctx) {
         String s1 = typeChecker.pop().getRecordType();
-        if (s1.equals("int[]")) {
-            typeChecker.push(new Type("int"));
-        }
-        else {
+        if (!s1.equals("int[]")) {
             System.err.println("ERROR: Length can only be applied to type int[]");
         }
+        typeChecker.push(new Type("int"));
     }
 
     @Override
@@ -238,12 +256,10 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
     @Override
     public void exitNewArrExpr(MiniJavaGrammarParser.NewArrExprContext ctx) {
         String s1 = typeChecker.pop().getRecordType();
-        if (s1.equals("int")) {
-            typeChecker.push(new Type("int[]"));
-        }
-        else {
+        if (!s1.equals("int")) {
             System.err.println("ERROR: Array sizes must be an integer");
         }
+        typeChecker.push(new Type("int[]"));
     }
 
     @Override
@@ -262,12 +278,10 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
     @Override
     public void exitNotExpr(MiniJavaGrammarParser.NotExprContext ctx) {
         String s1 = typeChecker.pop().getRecordType();
-        if (s1.equals("boolean")) {
-            typeChecker.push(new Type("boolean"));
-        }
-        else {
+        if (!s1.equals("boolean")) {
             System.err.println("ERROR: Not arguments can only be of type boolean");
         }
+        typeChecker.push(new Type("boolean"));
     }
 }
 

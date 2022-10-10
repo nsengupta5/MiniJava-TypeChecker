@@ -1,5 +1,4 @@
 // Generated from c:\Users\Chris\OneDrive - University of St Andrews\Lectures\PLDI\2021\practicals\MiniJava - ANTLR\src\minijava\MiniJavaGrammar.g by ANTLR 4.8
-package minijava;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

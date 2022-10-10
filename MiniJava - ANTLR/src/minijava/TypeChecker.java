@@ -3,27 +3,13 @@ package minijava;
 import minijava.symboltable.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 public class TypeChecker extends MiniJavaGrammarBaseListener {
-    private MiniJavaGrammarParser parser;
     private SymbolTable symbolTable;
     private ClassRecord currClass;
     private MethodRecord currMethod;
     private Stack<Type> typeChecker;
-
-    private boolean debugging = false;
-
-    public void printError(String error) {
-        System.err.println(error);
-        System.exit(-1);
-    }
-
-    public SymbolTable getSymbolTable() {
-        return symbolTable;
-    }
 
     public TypeChecker(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
@@ -31,96 +17,14 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
     }
 
     @Override
-    public void enterProgram(MiniJavaGrammarParser.ProgramContext ctx) {
-
-    }
-
-
-    @Override
-    public void exitProgram(MiniJavaGrammarParser.ProgramContext ctx) {
-
-    }
-
-    @Override
-    public void enterMainclass(MiniJavaGrammarParser.MainclassContext ctx) {
-
-    }
-
-    //
-    @Override
-    public void exitMainclass(MiniJavaGrammarParser.MainclassContext ctx) {
-
-    }
-
-    //
-    @Override
     public void enterClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
         currClass = symbolTable.findClass(ctx.ID(0).toString());
     }
 
-    //
-    @Override
-    public void exitClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
-        currClass = null;
-    }
-    //
-    @Override
-    public void enterVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
-
-    }
-
-    //
-    @Override
-    public void exitVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
-
-    }
-
-    //
     @Override
     public void enterMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
         currMethod = symbolTable.findMethod(ctx.ID().toString());
     }
-
-    //
-    @Override
-    public void exitMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
-        currMethod = null;
-    }
-
-    //
-    @Override
-    public void enterFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
-
-    }
-
-    //
-    @Override
-    public void exitFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
-
-    }
-
-    //
-    @Override
-    public void enterFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
-
-    }
-
-
-    //
-    @Override
-    public void exitFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
-
-    }
-
-    //
-    @Override
-    public void enterType(MiniJavaGrammarParser.TypeContext ctx) {
-    }
-
-    @Override
-    public void exitType(MiniJavaGrammarParser.TypeContext ctx) {
-    }
-//
 
     @Override
     public void exitStatement(MiniJavaGrammarParser.StatementContext ctx) {
@@ -341,36 +245,6 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
                 System.err.println("ERROR: Not arguments can only be of type boolean");
             }
         }
-    }
-
-    @Override
-    public void enterOp(MiniJavaGrammarParser.OpContext ctx) {
-        // System.out.println("enterOp");
-    }
-
-    @Override
-    public void exitOp(MiniJavaGrammarParser.OpContext ctx) {
-        // System.out.println("exitOp");
-    }
-
-    @Override
-    public void enterExprlist(MiniJavaGrammarParser.ExprlistContext ctx) {
-        //System.out.println("enterExprlist");
-    }
-
-    @Override
-    public void exitExprlist(MiniJavaGrammarParser.ExprlistContext ctx) {
-        //System.out.println("exitExprList");
-    }
-
-    @Override
-    public void enterExprrest(MiniJavaGrammarParser.ExprrestContext ctx) {
-        //System.out.println("enterExprrest");
-    }
-
-    @Override
-    public void exitExprrest(MiniJavaGrammarParser.ExprrestContext ctx) {
-        //System.out.println("exitExprrest");
     }
 }
 

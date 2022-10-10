@@ -110,7 +110,7 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
 
         VarRecord newVar = new VarRecord(id, type);
         if (symbolTable.getCurrentScope().getType().equals("method")) {
-            if (currMethod.getLocalVar(id) == null && currMethod.getParameters().get(id) == null) {
+            if (currMethod.getLocalVars().get(id) == null && currMethod.getParameters().get(id) == null) {
                 currMethod.pushLocalVar(id, newVar);
             }
             else {

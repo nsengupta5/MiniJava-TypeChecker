@@ -25,14 +25,6 @@ public class MethodRecord extends Record {
 		return localVars;
 	}
 
-	public void setParameters(Map<String, VarRecord> newParams) {
-		parameters = newParams;
-	}
-
-	public void setLocalVars(Map<String, VarRecord> newLocalVars) {
-		localVars = newLocalVars;
-	}
-
 	public void pushParameter(String key, VarRecord newParam) {
 		parameters.put(key, newParam);
 		if (newParam.getType().equals("int") || newParam.getType().equals("int[]") || newParam.getType().equals("boolean")) {

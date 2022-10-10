@@ -1,6 +1,5 @@
-package minijava;
-
 // Generated from MiniJavaGrammar.g by ANTLR 4.7.2
+package minijava;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -753,6 +752,118 @@ public class MiniJavaGrammarParser extends Parser {
 	}
 
 	public static class StatementContext extends ParserRuleContext {
+		public StatementContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_statement; }
+	 
+		public StatementContext() { }
+		public void copyFrom(StatementContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class ArrAssignStmtContext extends StatementContext {
+		public TerminalNode ID() { return getToken(MiniJavaGrammarParser.ID, 0); }
+		public TerminalNode LSQUARE() { return getToken(MiniJavaGrammarParser.LSQUARE, 0); }
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public TerminalNode RSQUARE() { return getToken(MiniJavaGrammarParser.RSQUARE, 0); }
+		public TerminalNode EQUALS() { return getToken(MiniJavaGrammarParser.EQUALS, 0); }
+		public TerminalNode SEMICOLON() { return getToken(MiniJavaGrammarParser.SEMICOLON, 0); }
+		public ArrAssignStmtContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterArrAssignStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitArrAssignStmt(this);
+		}
+	}
+	public static class PrintStmtContext extends StatementContext {
+		public TerminalNode SYSTEMOUT() { return getToken(MiniJavaGrammarParser.SYSTEMOUT, 0); }
+		public TerminalNode LPAREN() { return getToken(MiniJavaGrammarParser.LPAREN, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode RPAREN() { return getToken(MiniJavaGrammarParser.RPAREN, 0); }
+		public TerminalNode SEMICOLON() { return getToken(MiniJavaGrammarParser.SEMICOLON, 0); }
+		public PrintStmtContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterPrintStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitPrintStmt(this);
+		}
+	}
+	public static class IfElseStmtContext extends StatementContext {
+		public TerminalNode IF() { return getToken(MiniJavaGrammarParser.IF, 0); }
+		public TerminalNode LPAREN() { return getToken(MiniJavaGrammarParser.LPAREN, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode RPAREN() { return getToken(MiniJavaGrammarParser.RPAREN, 0); }
+		public List<StatementContext> statement() {
+			return getRuleContexts(StatementContext.class);
+		}
+		public StatementContext statement(int i) {
+			return getRuleContext(StatementContext.class,i);
+		}
+		public TerminalNode ELSE() { return getToken(MiniJavaGrammarParser.ELSE, 0); }
+		public IfElseStmtContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterIfElseStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitIfElseStmt(this);
+		}
+	}
+	public static class WhileStmtContext extends StatementContext {
+		public TerminalNode WHILE() { return getToken(MiniJavaGrammarParser.WHILE, 0); }
+		public TerminalNode LPAREN() { return getToken(MiniJavaGrammarParser.LPAREN, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode RPAREN() { return getToken(MiniJavaGrammarParser.RPAREN, 0); }
+		public StatementContext statement() {
+			return getRuleContext(StatementContext.class,0);
+		}
+		public WhileStmtContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterWhileStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitWhileStmt(this);
+		}
+	}
+	public static class AssignStmtContext extends StatementContext {
+		public TerminalNode ID() { return getToken(MiniJavaGrammarParser.ID, 0); }
+		public TerminalNode EQUALS() { return getToken(MiniJavaGrammarParser.EQUALS, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode SEMICOLON() { return getToken(MiniJavaGrammarParser.SEMICOLON, 0); }
+		public AssignStmtContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterAssignStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitAssignStmt(this);
+		}
+	}
+	public static class BlockStmtContext extends StatementContext {
 		public TerminalNode LBRACE() { return getToken(MiniJavaGrammarParser.LBRACE, 0); }
 		public TerminalNode RBRACE() { return getToken(MiniJavaGrammarParser.RBRACE, 0); }
 		public List<StatementContext> statement() {
@@ -761,34 +872,14 @@ public class MiniJavaGrammarParser extends Parser {
 		public StatementContext statement(int i) {
 			return getRuleContext(StatementContext.class,i);
 		}
-		public TerminalNode IF() { return getToken(MiniJavaGrammarParser.IF, 0); }
-		public TerminalNode LPAREN() { return getToken(MiniJavaGrammarParser.LPAREN, 0); }
-		public List<ExprContext> expr() {
-			return getRuleContexts(ExprContext.class);
-		}
-		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
-		}
-		public TerminalNode RPAREN() { return getToken(MiniJavaGrammarParser.RPAREN, 0); }
-		public TerminalNode ELSE() { return getToken(MiniJavaGrammarParser.ELSE, 0); }
-		public TerminalNode WHILE() { return getToken(MiniJavaGrammarParser.WHILE, 0); }
-		public TerminalNode SYSTEMOUT() { return getToken(MiniJavaGrammarParser.SYSTEMOUT, 0); }
-		public TerminalNode SEMICOLON() { return getToken(MiniJavaGrammarParser.SEMICOLON, 0); }
-		public TerminalNode ID() { return getToken(MiniJavaGrammarParser.ID, 0); }
-		public TerminalNode EQUALS() { return getToken(MiniJavaGrammarParser.EQUALS, 0); }
-		public TerminalNode LSQUARE() { return getToken(MiniJavaGrammarParser.LSQUARE, 0); }
-		public TerminalNode RSQUARE() { return getToken(MiniJavaGrammarParser.RSQUARE, 0); }
-		public StatementContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_statement; }
+		public BlockStmtContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterStatement(this);
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterBlockStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitStatement(this);
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitBlockStmt(this);
 		}
 	}
 
@@ -801,6 +892,7 @@ public class MiniJavaGrammarParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 			case 1:
+				_localctx = new BlockStmtContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(137);
@@ -824,6 +916,7 @@ public class MiniJavaGrammarParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new IfElseStmtContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(145);
@@ -843,6 +936,7 @@ public class MiniJavaGrammarParser extends Parser {
 				}
 				break;
 			case 3:
+				_localctx = new WhileStmtContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(153);
@@ -858,6 +952,7 @@ public class MiniJavaGrammarParser extends Parser {
 				}
 				break;
 			case 4:
+				_localctx = new PrintStmtContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(159);
@@ -873,6 +968,7 @@ public class MiniJavaGrammarParser extends Parser {
 				}
 				break;
 			case 5:
+				_localctx = new AssignStmtContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(165);
@@ -886,6 +982,7 @@ public class MiniJavaGrammarParser extends Parser {
 				}
 				break;
 			case 6:
+				_localctx = new ArrAssignStmtContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(170);
@@ -918,43 +1015,203 @@ public class MiniJavaGrammarParser extends Parser {
 	}
 
 	public static class ExprContext extends ParserRuleContext {
-		public TerminalNode INTEGER() { return getToken(MiniJavaGrammarParser.INTEGER, 0); }
+		public ExprContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_expr; }
+	 
+		public ExprContext() { }
+		public void copyFrom(ExprContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class GroupExprContext extends ExprContext {
+		public TerminalNode LPAREN() { return getToken(MiniJavaGrammarParser.LPAREN, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode RPAREN() { return getToken(MiniJavaGrammarParser.RPAREN, 0); }
+		public GroupExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterGroupExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitGroupExpr(this);
+		}
+	}
+	public static class ConstBoolExprContext extends ExprContext {
 		public TerminalNode TRUE() { return getToken(MiniJavaGrammarParser.TRUE, 0); }
 		public TerminalNode FALSE() { return getToken(MiniJavaGrammarParser.FALSE, 0); }
-		public TerminalNode ID() { return getToken(MiniJavaGrammarParser.ID, 0); }
-		public TerminalNode THIS() { return getToken(MiniJavaGrammarParser.THIS, 0); }
+		public ConstBoolExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterConstBoolExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitConstBoolExpr(this);
+		}
+	}
+	public static class NewObjExprContext extends ExprContext {
 		public TerminalNode NEW() { return getToken(MiniJavaGrammarParser.NEW, 0); }
-		public TerminalNode INT() { return getToken(MiniJavaGrammarParser.INT, 0); }
-		public TerminalNode LSQUARE() { return getToken(MiniJavaGrammarParser.LSQUARE, 0); }
+		public TerminalNode ID() { return getToken(MiniJavaGrammarParser.ID, 0); }
+		public TerminalNode LPAREN() { return getToken(MiniJavaGrammarParser.LPAREN, 0); }
+		public TerminalNode RPAREN() { return getToken(MiniJavaGrammarParser.RPAREN, 0); }
+		public NewObjExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterNewObjExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitNewObjExpr(this);
+		}
+	}
+	public static class ArrIndexExprContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+		public TerminalNode LSQUARE() { return getToken(MiniJavaGrammarParser.LSQUARE, 0); }
 		public TerminalNode RSQUARE() { return getToken(MiniJavaGrammarParser.RSQUARE, 0); }
-		public TerminalNode LPAREN() { return getToken(MiniJavaGrammarParser.LPAREN, 0); }
-		public TerminalNode RPAREN() { return getToken(MiniJavaGrammarParser.RPAREN, 0); }
-		public TerminalNode NOT() { return getToken(MiniJavaGrammarParser.NOT, 0); }
-		public OpContext op() {
-			return getRuleContext(OpContext.class,0);
-		}
-		public TerminalNode DOT() { return getToken(MiniJavaGrammarParser.DOT, 0); }
-		public TerminalNode LENGTH() { return getToken(MiniJavaGrammarParser.LENGTH, 0); }
-		public ExprlistContext exprlist() {
-			return getRuleContext(ExprlistContext.class,0);
-		}
-		public ExprContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_expr; }
+		public ArrIndexExprContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterExpr(this);
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterArrIndexExpr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitExpr(this);
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitArrIndexExpr(this);
+		}
+	}
+	public static class NewArrExprContext extends ExprContext {
+		public TerminalNode NEW() { return getToken(MiniJavaGrammarParser.NEW, 0); }
+		public TerminalNode INT() { return getToken(MiniJavaGrammarParser.INT, 0); }
+		public TerminalNode LSQUARE() { return getToken(MiniJavaGrammarParser.LSQUARE, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode RSQUARE() { return getToken(MiniJavaGrammarParser.RSQUARE, 0); }
+		public NewArrExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterNewArrExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitNewArrExpr(this);
+		}
+	}
+	public static class VarExprContext extends ExprContext {
+		public TerminalNode ID() { return getToken(MiniJavaGrammarParser.ID, 0); }
+		public VarExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterVarExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitVarExpr(this);
+		}
+	}
+	public static class ArrLengthExprContext extends ExprContext {
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode DOT() { return getToken(MiniJavaGrammarParser.DOT, 0); }
+		public TerminalNode LENGTH() { return getToken(MiniJavaGrammarParser.LENGTH, 0); }
+		public ArrLengthExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterArrLengthExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitArrLengthExpr(this);
+		}
+	}
+	public static class NotExprContext extends ExprContext {
+		public TerminalNode NOT() { return getToken(MiniJavaGrammarParser.NOT, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public NotExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterNotExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitNotExpr(this);
+		}
+	}
+	public static class OpExprContext extends ExprContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public OpContext op() {
+			return getRuleContext(OpContext.class,0);
+		}
+		public OpExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterOpExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitOpExpr(this);
+		}
+	}
+	public static class ConstIntExprContext extends ExprContext {
+		public TerminalNode INTEGER() { return getToken(MiniJavaGrammarParser.INTEGER, 0); }
+		public ConstIntExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterConstIntExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitConstIntExpr(this);
+		}
+	}
+	public static class ThisExprContext extends ExprContext {
+		public TerminalNode THIS() { return getToken(MiniJavaGrammarParser.THIS, 0); }
+		public ThisExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterThisExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitThisExpr(this);
+		}
+	}
+	public static class MethodCallExprContext extends ExprContext {
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode DOT() { return getToken(MiniJavaGrammarParser.DOT, 0); }
+		public TerminalNode ID() { return getToken(MiniJavaGrammarParser.ID, 0); }
+		public TerminalNode LPAREN() { return getToken(MiniJavaGrammarParser.LPAREN, 0); }
+		public TerminalNode RPAREN() { return getToken(MiniJavaGrammarParser.RPAREN, 0); }
+		public ExprlistContext exprlist() {
+			return getRuleContext(ExprlistContext.class,0);
+		}
+		public MethodCallExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).enterMethodCallExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof MiniJavaGrammarListener ) ((MiniJavaGrammarListener)listener).exitMethodCallExpr(this);
 		}
 	}
 
@@ -979,36 +1236,55 @@ public class MiniJavaGrammarParser extends Parser {
 			switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
 			case 1:
 				{
+				_localctx = new ConstIntExprContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+
 				setState(181);
 				match(INTEGER);
 				}
 				break;
 			case 2:
 				{
+				_localctx = new ConstBoolExprContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(182);
 				match(TRUE);
 				}
 				break;
 			case 3:
 				{
+				_localctx = new ConstBoolExprContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(183);
 				match(FALSE);
 				}
 				break;
 			case 4:
 				{
+				_localctx = new VarExprContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(184);
 				match(ID);
 				}
 				break;
 			case 5:
 				{
+				_localctx = new ThisExprContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(185);
 				match(THIS);
 				}
 				break;
 			case 6:
 				{
+				_localctx = new NewArrExprContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(186);
 				match(NEW);
 				setState(187);
@@ -1023,6 +1299,9 @@ public class MiniJavaGrammarParser extends Parser {
 				break;
 			case 7:
 				{
+				_localctx = new NewObjExprContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(192);
 				match(NEW);
 				setState(193);
@@ -1035,6 +1314,9 @@ public class MiniJavaGrammarParser extends Parser {
 				break;
 			case 8:
 				{
+				_localctx = new NotExprContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(196);
 				match(NOT);
 				setState(197);
@@ -1043,6 +1325,9 @@ public class MiniJavaGrammarParser extends Parser {
 				break;
 			case 9:
 				{
+				_localctx = new GroupExprContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(198);
 				match(LPAREN);
 				setState(199);
@@ -1066,7 +1351,7 @@ public class MiniJavaGrammarParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
 					case 1:
 						{
-						_localctx = new ExprContext(_parentctx, _parentState);
+						_localctx = new OpExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(204);
 						if (!(precpred(_ctx, 13))) throw new FailedPredicateException(this, "precpred(_ctx, 13)");
@@ -1078,7 +1363,7 @@ public class MiniJavaGrammarParser extends Parser {
 						break;
 					case 2:
 						{
-						_localctx = new ExprContext(_parentctx, _parentState);
+						_localctx = new ArrIndexExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(208);
 						if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
@@ -1092,7 +1377,7 @@ public class MiniJavaGrammarParser extends Parser {
 						break;
 					case 3:
 						{
-						_localctx = new ExprContext(_parentctx, _parentState);
+						_localctx = new ArrLengthExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(213);
 						if (!(precpred(_ctx, 11))) throw new FailedPredicateException(this, "precpred(_ctx, 11)");
@@ -1104,7 +1389,7 @@ public class MiniJavaGrammarParser extends Parser {
 						break;
 					case 4:
 						{
-						_localctx = new ExprContext(_parentctx, _parentState);
+						_localctx = new MethodCallExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(216);
 						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");

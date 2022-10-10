@@ -20,16 +20,8 @@ public class Scope extends Record {
 		this.parent = parent;	
 	}
 
-	public Scope getParent() {
-		return parent;
-	}
-
 	public void setScopeClass(ClassRecord scopeClass) {
 		this.scopeClass = scopeClass;
-	}
-
-	public ClassRecord getScopeClass() {
-		return scopeClass;
 	}
 
 	public void pushRecord(String key, Record record) {
@@ -38,24 +30,5 @@ public class Scope extends Record {
 
 	public Map<String, Record> getRecords() {
 		return records;
-	}
-
-	public void setRecords(Map<String, Record> newRecords) {
-		records = newRecords;
-	}
-
-	public String toString() {
-		if (parent == null) {
-			return this.getId() + " " + this.getType() + "\n";
-		}
-		StringBuilder sb = new StringBuilder();
-		Iterator<Map.Entry<String, Record>> itr = records.entrySet().iterator();
-		Map.Entry<String, Record> entry = null;
-		while (itr.hasNext()) {
-			entry = itr.next();
-			sb.append(this.getId() + " " + this.getType() + " " + entry.getValue().getType() + " " + this.parent.getId());
-			sb.append("\n");
-		}
-		return sb.toString();
 	}
 }

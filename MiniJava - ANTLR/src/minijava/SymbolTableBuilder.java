@@ -15,6 +15,21 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         System.exit(-1);
     }
 
+    public String getVarType(MiniJavaGrammarParser.TypeContext ctx) {
+        if (ctx.BOOLEAN() != null) {
+            return ctx.BOOLEAN().toString();
+        }
+        else if (ctx.LSQUARE() != null) {
+            return "int[]";
+        }
+        else if (ctx.INT() != null) {
+            return ctx.INT().toString();
+        }
+        else {
+            return ctx.ID().toString();
+        }
+    }
+
     public SymbolTable getSymbolTable() {
         return symbolTable;
     }
@@ -36,7 +51,6 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
     public void exitProgram(MiniJavaGrammarParser.ProgramContext ctx) {
         if (debugging) System.out.println("Exited program");
         symbolTable.popScope();
-//        symbolTable.printSymbolTable();
     }
 
     @Override
@@ -54,14 +68,12 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         symbolTable.addRecord(id, currClass);
     }
 
-    //
     @Override
     public void exitMainclass(MiniJavaGrammarParser.MainclassContext ctx) {
         if (debugging) System.out.println("Exited main class");
         symbolTable.popScope();
     }
 
-    //
     @Override
     public void enterClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
         if (debugging) System.out.println("Entered class declaration");
@@ -83,31 +95,17 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         symbolTable.addRecord(id, currClass);
     }
 
-    //
     @Override
     public void exitClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
         if (debugging) System.out.println("Exited class declaration");
         symbolTable.popScope();
     }
-    //
+
     @Override
     public void enterVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
         if (debugging) System.out.println("Entered variable declaration");
-        String id, type;
-        id = ctx.ID().toString();
-        if (ctx.type().BOOLEAN() != null) {
-            type = ctx.type().BOOLEAN().toString();
-        }
-        else if (ctx.type().LSQUARE() != null) {
-            type = "int[]";
-        }
-        else if (ctx.type().INT() != null) {
-            type = ctx.type().INT().toString();
-        }
-        else {
-            type = ctx.type().ID().toString();
-        }
-
+        String id = ctx.ID().toString();
+        String type = getVarType(ctx.type());
         VarRecord newVar = new VarRecord(id, type);
         if (symbolTable.getCurrentScope().getType().equals("method")) {
             if (currMethod.getLocalVars().get(id) == null && currMethod.getParameters().get(id) == null) {
@@ -131,31 +129,17 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         symbolTable.addRecord(id, newVar);
     }
 
-    //
     @Override
     public void exitVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
         if (debugging) System.out.println("Exited variable declaration");
         symbolTable.popScope();
     }
 
-    //
     @Override
     public void enterMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
         if (debugging) System.out.println("Entered method declaration");
-        String id, type;
-        id = ctx.ID().toString();
-        if (ctx.type().BOOLEAN() != null) {
-            type = ctx.type().BOOLEAN().toString();
-        }
-        else if (ctx.type().LSQUARE() != null) {
-            type = "int[]";
-        }
-        else if (ctx.type().INT() != null) {
-            type = ctx.type().INT().toString();
-        }
-        else {
-            type = ctx.type().ID().toString();
-        }
+        String id = ctx.ID().toString();
+        String type = getVarType(ctx.type());
         if (currClass.getMethods().get(id) != null) {
             printError("ERROR: Method already defined within class");
         }
@@ -168,31 +152,17 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         symbolTable.addRecord(id, currMethod);
     }
 
-    //
     @Override
     public void exitMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
         if (debugging) System.out.println("Exited method declaration");
         symbolTable.popScope();
     }
 
-    //
     @Override
     public void enterFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
         if (debugging) System.out.println("Entered formal list");
-        String id, type;
-        id = ctx.ID().toString();
-        if (ctx.type().BOOLEAN() != null) {
-            type = ctx.type().BOOLEAN().toString();
-        }
-        else if (ctx.type().LSQUARE() != null) {
-            type = "int[]";
-        }
-        else if (ctx.type().INT() != null) {
-            type = ctx.type().INT().toString();
-        }
-        else {
-            type = ctx.type().ID().toString();
-        }
+        String id = ctx.ID().toString();
+        String type = getVarType(ctx.type());
         if (currMethod.getParameters().get(id) != null) {
             printError("Parameter already exists");
         }
@@ -209,31 +179,17 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         symbolTable.addRecord(id, newVar);
     }
 
-    //
     @Override
     public void exitFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
         if (debugging) System.out.println("Exited formal list");
         symbolTable.popScope();
     }
 
-    //
     @Override
     public void enterFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
         if (debugging) System.out.println("Entered formal list");
-        String id, type;
-        id = ctx.ID().toString();
-        if (ctx.type().BOOLEAN() != null) {
-            type = ctx.type().BOOLEAN().toString();
-        }
-        else if (ctx.type().LSQUARE() != null) {
-            type = "int[]";
-        }
-        else if (ctx.type().INT() != null) {
-            type = ctx.type().INT().toString();
-        }
-        else {
-            type = ctx.type().ID().toString();
-        }
+        String id = ctx.ID().toString();
+        String type = getVarType(ctx.type());
         if (currMethod.getParameters().get(id) != null) {
             printError("ERROR: Parameter already exists");
         }
@@ -244,61 +200,10 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         symbolTable.pushScope(paramScope);
         symbolTable.addRecord(id, newVar);
     }
-
-
-    //
     @Override
     public void exitFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
         if (debugging) System.out.println("Exited Formal Rest");
         symbolTable.popScope();
-    }
-
-    //
-    @Override
-    public void enterType(MiniJavaGrammarParser.TypeContext ctx) {
-    }
-
-    @Override
-    public void exitType(MiniJavaGrammarParser.TypeContext ctx) {
-    }
-//
-
-    @Override
-    public void enterStatement(MiniJavaGrammarParser.StatementContext ctx) {
-    }
-
-    @Override
-    public void exitExpr(MiniJavaGrammarParser.ExprContext ctx) {
-    }
-
-    @Override
-    public void enterOp(MiniJavaGrammarParser.OpContext ctx) {
-        // System.out.println("enterOp");
-    }
-
-    @Override
-    public void exitOp(MiniJavaGrammarParser.OpContext ctx) {
-        // System.out.println("exitOp");
-    }
-
-    @Override
-    public void enterExprlist(MiniJavaGrammarParser.ExprlistContext ctx) {
-        //System.out.println("enterExprlist");
-    }
-
-    @Override
-    public void exitExprlist(MiniJavaGrammarParser.ExprlistContext ctx) {
-        //System.out.println("exitExprList");
-    }
-
-    @Override
-    public void enterExprrest(MiniJavaGrammarParser.ExprrestContext ctx) {
-        //System.out.println("enterExprrest");
-    }
-
-    @Override
-    public void exitExprrest(MiniJavaGrammarParser.ExprrestContext ctx) {
-        //System.out.println("exitExprrest");
     }
 }
 

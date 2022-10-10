@@ -34,10 +34,6 @@ public class ClassRecord extends Record {
 		methods = newMethods;
 	}
 
-	public void setGlobalVars(Map<String, VarRecord> newGlobalVars) {
-		globalVars = newGlobalVars;
-	}
-
 	public void pushGlobalVar(String key, VarRecord localVar) {
 		globalVars.put(key, localVar);
 	}

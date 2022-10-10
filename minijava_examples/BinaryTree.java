@@ -156,7 +156,6 @@ class Tree{
 	return true ;
     }
 
-
     // Delete an element from the tree
     public boolean Delete(int v_key){
 	Tree current_node ;
@@ -210,8 +209,8 @@ class Tree{
 	boolean ntb ;
 	int auxkey1 ;
 	int auxkey2 ;
-	
-	if (c_node.GetHas_Left()) 
+
+	if (c_node.GetHas_Left())
 	    ntb = this.RemoveLeft(p_node,c_node) ;
 	else 
 	    if (c_node.GetHas_Right())

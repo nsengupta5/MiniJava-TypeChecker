@@ -15,11 +15,6 @@ public class Program extends Record {
         return classes;
     }
 
-    public void setClasses(Map<String, ClassRecord> newClasses) {
-        classes = newClasses;
-    }
-
-
     public void pushClass(String key, ClassRecord newClass) {
         classes.put(key, newClass);
     }

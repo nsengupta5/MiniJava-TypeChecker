@@ -47,15 +47,9 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
         }
     }
 
-    //
-    @Override
-    public void exitVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
-    }
-
-    //
     @Override
     public void enterMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
-        currentMethod = symbolTable.findMethod(ctx.ID().toString());
+        currentMethod = currentClass.getMethods().get(ctx.ID().toString());
     }
 
     //
@@ -90,40 +84,19 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
 
     }
 
-    //
     @Override
-    public void exitFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
-
+    public void enterAssignStmt(MiniJavaGrammarParser.AssignStmtContext ctx) {
+        if (ctx.ID() != null) {
+            String varName = ctx.ID().toString();
+            if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
+                if (currentClass.getGlobalVars().get(varName) == null) {
+                    printError("ERROR: Variable is not in scope");
+                }
+            }
+        }
     }
 
-    //
-    @Override
-    public void enterFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
-
-    }
-
-
-    //
-    @Override
-    public void exitFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
-
-    }
-
-    //
-    @Override
-    public void enterType(MiniJavaGrammarParser.TypeContext ctx) {
-
-    }
-
-    @Override
-    public void exitType(MiniJavaGrammarParser.TypeContext ctx) {
-        // System.out.println("exitType");
-    }
-//
-
-
-    @Override
-    public void enterStatement(MiniJavaGrammarParser.StatementContext ctx) {
+    public void enterArrAssignStmt(MiniJavaGrammarParser.ArrAssignStmtContext ctx) {
         if (ctx.ID() != null) {
             String varName = ctx.ID().toString();
             if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
@@ -135,68 +108,20 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
     }
 
     @Override
-    public void exitExpr(MiniJavaGrammarParser.ExprContext ctx) {
-        if (ctx.ID() != null && ctx.LPAREN() == null && ctx.RPAREN() == null) {
-            String varName = ctx.ID().toString();
-            if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
-                if (currentClass.getGlobalVars().get(varName) == null) {
-                    printError("ERROR: Variable is not in scope");
-                }
+    public void exitVarExpr(MiniJavaGrammarParser.VarExprContext ctx) {
+        String varName = ctx.ID().toString();
+        if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
+            if (currentClass.getGlobalVars().get(varName) == null) {
+                printError("ERROR: Variable is not in scope");
             }
         }
+    }
 
-        if (ctx.ID() != null && ctx.NEW() != null) {
-            if (symbolTable.findClass(ctx.ID().toString()) == null) {
-                printError("ERROR: Object does not have class declaration");
-            }
+    @Override
+    public void exitNewObjExpr(MiniJavaGrammarParser.NewObjExprContext ctx) {
+        if (symbolTable.findClass(ctx.ID().toString()) == null) {
+            printError("ERROR: Object does not have class declaration");
         }
-
-        if (ctx.ID() != null && ctx.DOT() != null) {
-            if (ctx.expr(0).THIS() != null) {
-                if (currentClass.getMethods().get(ctx.ID().toString()) == null) {
-                   printError("ERROR: Current class does not contain given method");
-                }
-            }
-            else {
-                if (ctx.expr(0).ID() != null)  {
-                    ClassRecord c = symbolTable.findClass(ctx.expr(0).ID().toString());
-                    if (c != null && c.getMethods().get(ctx.ID().toString()) == null) {
-                        printError("Object class does not contain given method");
-                    }
-                }
-            }
-        }
-
-    }
-
-    @Override
-    public void enterOp(MiniJavaGrammarParser.OpContext ctx) {
-        // System.out.println("enterOp");
-    }
-
-    @Override
-    public void exitOp(MiniJavaGrammarParser.OpContext ctx) {
-        // System.out.println("exitOp");
-    }
-
-    @Override
-    public void enterExprlist(MiniJavaGrammarParser.ExprlistContext ctx) {
-        //System.out.println("enterExprlist");
-    }
-
-    @Override
-    public void exitExprlist(MiniJavaGrammarParser.ExprlistContext ctx) {
-        //System.out.println("exitExprList");
-    }
-
-    @Override
-    public void enterExprrest(MiniJavaGrammarParser.ExprrestContext ctx) {
-        //System.out.println("enterExprrest");
-    }
-
-    @Override
-    public void exitExprrest(MiniJavaGrammarParser.ExprrestContext ctx) {
-        //System.out.println("exitExprrest");
     }
 }
 

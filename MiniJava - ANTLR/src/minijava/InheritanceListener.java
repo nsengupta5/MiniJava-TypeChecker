@@ -1,7 +1,5 @@
 package minijava;
 
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import minijava.symboltable.*;
 
 import java.util.*;

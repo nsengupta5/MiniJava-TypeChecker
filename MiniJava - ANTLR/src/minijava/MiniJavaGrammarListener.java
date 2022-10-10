@@ -88,25 +88,221 @@ public interface MiniJavaGrammarListener extends ParseTreeListener {
 	 */
 	void exitType(MiniJavaGrammarParser.TypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaGrammarParser#statement}.
+	 * Enter a parse tree produced by the {@code BlockStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void enterStatement(MiniJavaGrammarParser.StatementContext ctx);
+	void enterBlockStmt(MiniJavaGrammarParser.BlockStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaGrammarParser#statement}.
+	 * Exit a parse tree produced by the {@code BlockStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void exitStatement(MiniJavaGrammarParser.StatementContext ctx);
+	void exitBlockStmt(MiniJavaGrammarParser.BlockStmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaGrammarParser#expr}.
+	 * Enter a parse tree produced by the {@code IfElseStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpr(MiniJavaGrammarParser.ExprContext ctx);
+	void enterIfElseStmt(MiniJavaGrammarParser.IfElseStmtContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaGrammarParser#expr}.
+	 * Exit a parse tree produced by the {@code IfElseStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpr(MiniJavaGrammarParser.ExprContext ctx);
+	void exitIfElseStmt(MiniJavaGrammarParser.IfElseStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code WhileStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileStmt(MiniJavaGrammarParser.WhileStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code WhileStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileStmt(MiniJavaGrammarParser.WhileStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code PrintStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrintStmt(MiniJavaGrammarParser.PrintStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code PrintStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrintStmt(MiniJavaGrammarParser.PrintStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code AssignStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignStmt(MiniJavaGrammarParser.AssignStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AssignStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignStmt(MiniJavaGrammarParser.AssignStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ArrAssignStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrAssignStmt(MiniJavaGrammarParser.ArrAssignStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ArrAssignStmt}
+	 * labeled alternative in {@link MiniJavaGrammarParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrAssignStmt(MiniJavaGrammarParser.ArrAssignStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code GroupExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterGroupExpr(MiniJavaGrammarParser.GroupExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code GroupExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitGroupExpr(MiniJavaGrammarParser.GroupExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ConstBoolExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstBoolExpr(MiniJavaGrammarParser.ConstBoolExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ConstBoolExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstBoolExpr(MiniJavaGrammarParser.ConstBoolExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code NewObjExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterNewObjExpr(MiniJavaGrammarParser.NewObjExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code NewObjExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitNewObjExpr(MiniJavaGrammarParser.NewObjExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ArrIndexExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrIndexExpr(MiniJavaGrammarParser.ArrIndexExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ArrIndexExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrIndexExpr(MiniJavaGrammarParser.ArrIndexExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code NewArrExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterNewArrExpr(MiniJavaGrammarParser.NewArrExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code NewArrExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitNewArrExpr(MiniJavaGrammarParser.NewArrExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code VarExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarExpr(MiniJavaGrammarParser.VarExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code VarExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarExpr(MiniJavaGrammarParser.VarExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ArrLengthExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrLengthExpr(MiniJavaGrammarParser.ArrLengthExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ArrLengthExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrLengthExpr(MiniJavaGrammarParser.ArrLengthExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code NotExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterNotExpr(MiniJavaGrammarParser.NotExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code NotExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitNotExpr(MiniJavaGrammarParser.NotExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code OpExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterOpExpr(MiniJavaGrammarParser.OpExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code OpExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitOpExpr(MiniJavaGrammarParser.OpExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ConstIntExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstIntExpr(MiniJavaGrammarParser.ConstIntExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ConstIntExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstIntExpr(MiniJavaGrammarParser.ConstIntExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ThisExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterThisExpr(MiniJavaGrammarParser.ThisExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ThisExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitThisExpr(MiniJavaGrammarParser.ThisExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code MethodCallExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodCallExpr(MiniJavaGrammarParser.MethodCallExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MethodCallExpr}
+	 * labeled alternative in {@link MiniJavaGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodCallExpr(MiniJavaGrammarParser.MethodCallExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaGrammarParser#op}.
 	 * @param ctx the parse tree

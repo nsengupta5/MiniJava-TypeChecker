@@ -4,8 +4,18 @@ class Factorial{
     }
 }
 
+class Bac {
+
+}
+
 class Fac {
 	int chickens;
+	int x;
+
+	public int blah() {
+		return x;
+	}
+
 	public int ComputeFac(int num){
 		int num_aux;
 		if (num < 1)

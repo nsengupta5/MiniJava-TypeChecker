@@ -23,27 +23,27 @@ type : INT LSQUARE RSQUARE
      | ID
      ;
 
-statement : LBRACE statement* RBRACE
-          | IF LPAREN expr RPAREN statement ELSE statement
-          | WHILE LPAREN expr RPAREN statement
-          | SYSTEMOUT LPAREN expr RPAREN SEMICOLON
-          | ID EQUALS expr SEMICOLON
-          | ID LSQUARE expr RSQUARE EQUALS expr SEMICOLON
+statement : LBRACE statement* RBRACE #BlockStmt
+          | IF LPAREN expr RPAREN statement ELSE statement #IfElseStmt
+          | WHILE LPAREN expr RPAREN statement #WhileStmt
+          | SYSTEMOUT LPAREN expr RPAREN SEMICOLON #PrintStmt
+          | ID EQUALS expr SEMICOLON #AssignStmt
+          | ID LSQUARE expr RSQUARE EQUALS expr SEMICOLON #ArrAssignStmt
             ;
 
-expr : expr op expr
-     | expr LSQUARE expr RSQUARE
-     | expr DOT LENGTH
-     | expr DOT ID LPAREN exprlist? RPAREN
-     | INTEGER
-     | TRUE
-     | FALSE
-     | ID
-     | THIS
-     | NEW INT LSQUARE expr RSQUARE
-     | NEW ID LPAREN RPAREN
-     | NOT expr
-     | LPAREN expr RPAREN
+expr : expr op expr #OpExpr
+     | expr LSQUARE expr RSQUARE #ArrIndexExpr
+     | expr DOT LENGTH #ArrLengthExpr
+     | expr DOT ID LPAREN exprlist? RPAREN #MethodCallExpr
+     | INTEGER #ConstIntExpr
+     | TRUE #ConstBoolExpr
+     | FALSE #ConstBoolExpr
+     | ID #VarExpr
+     | THIS #ThisExpr
+     | NEW INT LSQUARE expr RSQUARE #NewArrExpr
+     | NEW ID LPAREN RPAREN #NewObjExpr
+     | NOT expr #NotExpr
+     | LPAREN expr RPAREN #GroupExpr
     ;
 
 op : AND | LT | PLUS | MINUS | MUL ; 

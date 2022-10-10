@@ -37,70 +37,12 @@ public class SymbolTable {
 		scopes.get(currScopeIndex).pushRecord(key, record);
 	}
 
-	public Record getRecord(String key) {
-		for (int i = currScopeIndex; i >= 0; i--) {
-			Map<String, Record> currScopeRecords = scopes.get(i).getRecords();
-			if (currScopeRecords.containsKey(key)) {
-				return currScopeRecords.get(key);
-			}
-		}
-		return null;
-	}
-
-	public List<Scope> getScopes() {
-		return scopes;
-	}
-
-	public void setCurrentScope(Scope newScope) {
-		scopes.remove(currScopeIndex);
-		scopes.add(newScope);
-	}
-
 	public Scope getCurrentScope() {
 		return scopes.get(currScopeIndex);
 	}
 
 	public ClassRecord findClass(String id) {
 		return program.getClasses().get(id);
-	}
-
-	public VarRecord findVariable(String id) {
-		for (Map.Entry<String, ClassRecord> c : program.getClasses().entrySet()) {
-			Map<String, VarRecord> globalVars = c.getValue().getGlobalVars();
-			for (Map.Entry<String, VarRecord> g : globalVars.entrySet()) {
-				if (g.getValue().getId().equals(id)) {
-					return g.getValue();
-				}
-			}
-			Map<String, MethodRecord> methods = c.getValue().getMethods();
-			for (Map.Entry<String, MethodRecord> m : methods.entrySet()) {
-				Map<String, VarRecord> params = m.getValue().getParameters();
-				for (Map.Entry<String, VarRecord> p : params.entrySet()) {
-					if (p.getValue().getId().equals(id)) {
-						return p.getValue();
-					}
-				}
-				Map<String, VarRecord> localVars = m.getValue().getLocalVars();
-				for (Map.Entry<String, VarRecord> l : localVars.entrySet()) {
-					if (l.getValue().getId().equals(id)) {
-						return l.getValue();
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	public MethodRecord findMethod(String id) {
-		for (Map.Entry<String, ClassRecord> c : program.getClasses().entrySet()) {
-			Map<String, MethodRecord> methods = c.getValue().getMethods();
-			for (Map.Entry<String, MethodRecord> m : methods.entrySet()) {
-				if (m.getValue().getId().equals(id)) {
-					return m.getValue();
-				}
-			}
-		}
-		return null;
 	}
 
 	public void printSymbolTable() {

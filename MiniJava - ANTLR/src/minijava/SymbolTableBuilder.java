@@ -19,7 +19,7 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         return symbolTable;
     }
 
-    public SymbolTableBuilder(MiniJavaGrammarParser parse) {
+    public SymbolTableBuilder(MiniJavaGrammarParser parser) {
         symbolTable = new SymbolTable();
         this.parser = parser;
     }
@@ -197,7 +197,12 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
             printError("Parameter already exists");
         }
         VarRecord newVar = new VarRecord(id, type);
-        currMethod.pushParameter(id, newVar);
+        if (symbolTable.findClass(newVar.getType()) != null) {
+            currMethod.pushParameter(id, newVar);
+        }
+        else {
+            currMethod.pushParameter(id, newVar);
+        }
         Scope paramScope = new Scope(id, "param");
         paramScope.setParent(symbolTable.getCurrentScope());
         symbolTable.pushScope(paramScope);

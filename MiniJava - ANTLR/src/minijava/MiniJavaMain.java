@@ -42,9 +42,9 @@ public class MiniJavaMain {
 
         walker.walk(verifier, tree);
 
-//        TypeChecker typecheck = new TypeChecker(verifier.getSymbolTable());
-//
-//        walker.walk(typecheck, tree);
+        TypeChecker typecheck = new TypeChecker(verifier.getSymbolTable());
+
+        walker.walk(typecheck, tree);
 
     }
 

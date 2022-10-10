@@ -47,10 +47,6 @@ public class SymbolTable {
 		return null;
 	}
 
-	public void setScopes(List<Scope> newScopes) {
-		scopes = newScopes;
-	}
-
 	public List<Scope> getScopes() {
 		return scopes;
 	}
@@ -107,32 +103,24 @@ public class SymbolTable {
 		return null;
 	}
 
-	public int getCurrScopeIndex() {
-		return currScopeIndex;
-	}
-
-	public void setCurrScopeIndex(int currScopeIndex) {
-		this.currScopeIndex = currScopeIndex;
-	}
-
 	public void printSymbolTable() {
 		Map<String, ClassRecord> allClasses = program.getClasses();
 		for (Map.Entry<String, ClassRecord> c : allClasses.entrySet()) {
 			Map<String, MethodRecord> allMethods = c.getValue().getMethods();
 			Map<String, VarRecord> allGlobalVars = c.getValue().getGlobalVars();
-			System.out.println("CLASS: " + c.getValue().getId() + " TYPE: " + c.getValue().getType());
+			System.out.println("LEVEL 1: ClASS  " +  "TYPE: " + c.getValue().getType() + " IDENTITY: " + c.getValue().getId());
 			for (Map.Entry<String,VarRecord> g : allGlobalVars.entrySet()) {
-				System.out.println("		GLOBAL VARIABLE: " + g.getValue().getId() +  " TYPE: " + g.getValue().getType() +  " PARENT: " + c.getValue().getId());
+				System.out.println("		LEVEL 2: GLOBAL VARIABLE  " + "TYPE: " + g.getValue().getType() +  " IDENTITY: " + g.getValue().getId());
 			}
 			for (Map.Entry<String,MethodRecord> m : allMethods.entrySet()) {
 				Map<String, VarRecord> allParams = m.getValue().getParameters();
 				Map<String, VarRecord> allLocalVars = m.getValue().getLocalVars();
-				System.out.println("		METHOD: " + m.getValue().getId() + " TYPE: " + m.getValue().getType() + " PARENT: " + c.getValue().getId());
+				System.out.println("		LEVEL 2: METHOD           " + "TYPE: " + m.getValue().getType() + " IDENTITY: " + m.getValue().getId());
 				for (Map.Entry<String, VarRecord> p : allParams.entrySet()) {
-					System.out.println("				PARAMETER: " + p.getValue().getId() + " TYPE: " + p.getValue().getType() + " PARENT: " + m.getValue().getId());
+					System.out.println("				LEVEL 3 PARAMETER:       " + "TYPE: " + p.getValue().getType() + " IDENTITY : " + p.getValue().getId());
 				}
 				for (Map.Entry<String, VarRecord> l : allLocalVars.entrySet()) {
-					System.out.println("				LOCAL VARIABLE: " + l.getValue().getId() + " TYPE: " + l.getValue().getType() +  " PARENT: " + m.getValue().getId());
+					System.out.println("				LEVEL 3 LOCAL VARIABLE:  " + "TYPE: " + l.getValue().getType() +  " IDENTITY : " + l.getValue().getId());
 				}
 			}
 		}

@@ -54,7 +54,7 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
             t = s1.getRecordType();
         }
         if (!currMethod.getType().equals(t)) {
-            System.err.println("ERROR: Invalid return type");
+            System.err.println("ERROR: Invalid return type \"" + t + "\" for method \"" + currMethod.getId() + "\"");
         }
     }
 
@@ -121,7 +121,7 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
         }
         String rhs = typeChecker.pop().getRecordType();
         if (!lhs.equals(rhs)) {
-            System.err.println("ERROR: Incompatible types");
+            System.err.println("ERROR: Incompatible type assignment for variable \"" + v.getId()  + "\"");
         }
     }
 
@@ -131,23 +131,23 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
      */
     @Override
     public void exitArrAssignStmt(MiniJavaGrammarParser.ArrAssignStmtContext ctx) {
-        String arr;
+        VarRecord arr;
         // Gets the array type
         if (currMethod.getParameters().get(ctx.ID().toString()) != null) {
-           arr = currMethod.getParameters().get(ctx.ID().toString()).getType();
+           arr = currMethod.getParameters().get(ctx.ID().toString());
         }
         else if (currMethod.getLocalVars().get(ctx.ID().toString()) != null) {
-            arr = currMethod.getLocalVars().get(ctx.ID().toString()).getType();
+            arr = currMethod.getLocalVars().get(ctx.ID().toString());
         }
         else {
-            arr = currClass.getGlobalVars().get(ctx.ID().toString()).getType();
+            arr = currClass.getGlobalVars().get(ctx.ID().toString());
         }
         String lhs = typeChecker.pop().getRecordType();
         String index = typeChecker.pop().getRecordType();
 
         // Checks if the assigned variable is an int[]
-        if (!arr.equals("int[]")) {
-            System.err.println("ERROR: Variable must be of type int[]");
+        if (!arr.getType().equals("int[]")) {
+            System.err.println("ERROR: Variable \"" + arr.getId() + "\" must be of type int[]");
         }
 
         // Checks if the type being assigned to int[] index is an integer
@@ -202,7 +202,7 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
             // Checks if the object contains the method
             MethodRecord m = c.getMethods().get(ctx.ID().toString());
             if (m == null) {
-                System.err.println("ERROR: Given class does not contain this method");
+                System.err.println("ERROR: Given class \"" + c.getId() + "\" does not contain method");
                 typeChecker.push(new Type("class"));
                 return;
             }
@@ -222,12 +222,12 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
                 // CHECK CLASS TYPES E.G ACCEPT METHOD IN TREEVISITOR
                 if (p.getObject() != null) {
                     if (!p.getObject().getId().equals(param)) {
-                        System.err.println("ERROR: Argument type not compatible");
+                        System.err.println("ERROR: Argument type \"" + p.getObject().getId() + "\" does not match \"" + param + "\"");
                     }
                 }
                 else {
                     if (!t.equals(param)) {
-                        System.err.println("ERROR: Argument type not compatible");
+                        System.err.println("ERROR: Argument type \"" + t + "\" does not match \"" + param + "\"");
                     }
                 }
             }
@@ -254,13 +254,13 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
         if (ctx.op().AND() == null) {
             // Checks if integer operations are performed on integers
             if (!(s1.equals("int") && s2.equals("int"))) {
-                System.err.println("ERROR: Both not integers");
+                System.err.println("ERROR: Integer operations only allow integers");
             }
         }
         else {
             // Checks if boolean operations are performed on booleans
             if (!(s1.equals("boolean") && s2.equals("boolean"))) {
-                System.err.println("ERROR: Both not booleans");
+                System.err.println("ERROR: Boolean operations only allow booleans");
             }
         }
 

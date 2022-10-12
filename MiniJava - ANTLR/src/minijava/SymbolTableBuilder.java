@@ -96,7 +96,7 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         String type = ctx.CLASS().toString();
         // Checks the class hasn't already been declared
         if (symbolTable.findClass(id) != null) {
-            printError("ERROR: Class name already exists");
+            printError("ERROR: Class name \"" + id + "\" already exists");
         }
         ClassRecord newClass = new ClassRecord(id, type);
         // Sets the superclass for the new class
@@ -132,7 +132,7 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
                 currMethod.pushLocalVar(id, newVar);
             }
             else {
-                printError("ERROR: Variable already declared within method");
+                printError("ERROR: Variable \"" + id + "\" already declared within method \"" + currMethod.getId() + "\"");
             }
         }
         else {
@@ -141,7 +141,7 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
                 currClass.pushGlobalVar(id, newVar);
             }
             else {
-                printError("ERROR: Global variable already declared within class");
+                printError("ERROR: Global variable \"" + id + "\" already declared within class \"" + currClass.getId() + "\"" );
             }
         }
     }
@@ -156,7 +156,7 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         String type = getVarType(ctx.type());
         // Checks if method already exists with the class
         if (currClass.getMethods().get(id) != null) {
-            printError("ERROR: Method already defined within class");
+            printError("ERROR: Method \"" + id + "\" already defined within class \"" + currClass.getId() + "\"");
         }
         currMethod = new MethodRecord(id, type);
         currClass.pushMethod(id, currMethod);
@@ -181,7 +181,7 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         String type = getVarType(ctx.type());
         // Checks if current method already contains parameter
         if (currMethod.getParameters().get(id) != null) {
-            printError("Parameter already exists");
+            printError("Parameter \"" + id + "\" already exists in method \"" + currMethod.getId() + "\"");
         }
         VarRecord newVar = new VarRecord(id, type);
         currMethod.pushParameter(id, newVar);
@@ -197,7 +197,7 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
         String type = getVarType(ctx.type());
         // Checks if current method already contains parameter
         if (currMethod.getParameters().get(id) != null) {
-            printError("ERROR: Parameter already exists");
+            printError("Parameter \"" + id + "\" already exists in method \"" + currMethod.getId() + "\"");
         }
         VarRecord newVar = new VarRecord(id, type);
         currMethod.pushParameter(id, newVar);

@@ -58,7 +58,7 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
             String objectType = ctx.type().ID().toString();
             // Checks if object exists
             if (symbolTable.getProgram().getClasses().get(objectType) == null) {
-                SymbolTableBuilder.printError("ERROR: Object doesn't exist");
+                SymbolTableBuilder.printError("ERROR: Object \"" + objectType + "\" doesn't exist");
             }
         }
     }
@@ -92,7 +92,7 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
         VarRecord v = currentClass.getGlobalVars().get(id);
         if (v != null) {
             if (v.getType().equals(type)) {
-                SymbolTableBuilder.printError("ERROR: Cannot use global variable within parameter");
+                SymbolTableBuilder.printError("ERROR: Cannot use global variable \"" + id + "\" within parameters");
             }
         }
 
@@ -108,7 +108,7 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
             String varName = ctx.ID().toString();
             if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
                 if (currentClass.getGlobalVars().get(varName) == null) {
-                    SymbolTableBuilder.printError("ERROR: Variable is not in scope");
+                    SymbolTableBuilder.printError("ERROR: Variable \"" + varName + "\" is not in scope");
                 }
             }
         }
@@ -123,7 +123,7 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
             String varName = ctx.ID().toString();
             if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
                 if (currentClass.getGlobalVars().get(varName) == null) {
-                    SymbolTableBuilder.printError("ERROR: int[] Variable is not in scope");
+                    SymbolTableBuilder.printError("ERROR: int[] Variable \"" + varName + "\" is not in scope");
                 }
             }
         }
@@ -138,7 +138,7 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
         String varName = ctx.ID().toString();
         if (currentMethod.getLocalVars().get(varName) == null && currentMethod.getParameters().get(varName) == null) {
             if (currentClass.getGlobalVars().get(varName) == null) {
-                SymbolTableBuilder.printError("ERROR: Variable in expression is not in scope");
+                SymbolTableBuilder.printError("ERROR: Variable \"" + varName + "\" in expression is not in scope");
             }
         }
     }
@@ -150,7 +150,7 @@ public class ScopeCheckingStatements extends MiniJavaGrammarBaseListener {
     @Override
     public void exitNewObjExpr(MiniJavaGrammarParser.NewObjExprContext ctx) {
         if (symbolTable.findClass(ctx.ID().toString()) == null) {
-            SymbolTableBuilder.printError("ERROR: Object does not have class declaration");
+            SymbolTableBuilder.printError("ERROR: Object \"" + ctx.ID().toString() + "\" does not have class declaration");
         }
     }
 }

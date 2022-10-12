@@ -1,50 +1,37 @@
 package minijava.symboltable;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class SymbolTable {
-	private List<Scope> scopes;
-	private int currScopeIndex;
 	private Program program;
 
+	/**
+	 * Constructor for the Symbol Table
+	 */
 	public SymbolTable() {
-		this.scopes = new ArrayList<>();
-		this.currScopeIndex = -1;
 		program = new Program("Prog", "Program");
 	}
 
-	public void pushScope(Scope newScope) {
-		scopes.add(newScope);
-		currScopeIndex++;
-	}
-
-	public int popScope() {
-		scopes.remove(currScopeIndex);
-		return currScopeIndex--;
-	}
-
-	public void addClassToProgram(String id, ClassRecord newClass) {
-		program.pushClass(id, newClass);
-	}
-
+	/**
+	 * Returns the program record
+	 * @return The program record
+	 */
 	public Program getProgram() {
 		return program;
 	}
 
-	public void addRecord(String key, Record record) {
-		scopes.get(currScopeIndex).pushRecord(key, record);
-	}
 
-	public Scope getCurrentScope() {
-		return scopes.get(currScopeIndex);
-	}
-
+	/**
+	 * Finds and returns a class from the symbol table
+	 * @param id The class's identifier
+	 * @return The class record
+	 */
 	public ClassRecord findClass(String id) {
 		return program.getClasses().get(id);
 	}
 
+	/**
+	 * Prints the symbol table
+	 */
 	public void printSymbolTable(){
 		Map<String, ClassRecord> allClasses = program.getClasses();
 		for (Map.Entry<String, ClassRecord> c : allClasses.entrySet()) {
@@ -68,4 +55,3 @@ public class SymbolTable {
 		}
 	}
 }
-

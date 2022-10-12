@@ -8,11 +8,20 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
     private ClassRecord currClass;
     private MethodRecord currMethod;
 
-    public void printError(String error) {
+    /**
+     * Prints an error and exits the program
+     * @param error The error string
+     */
+    public static void printError(String error) {
         System.err.println(error);
         System.exit(-1);
     }
 
+    /**
+     * Returns the type of variable
+     * @param ctx A TypeContext
+     * @return The type of variable
+     */
     public static String getVarType(MiniJavaGrammarParser.TypeContext ctx) {
         if (ctx.BOOLEAN() != null) {
             return ctx.BOOLEAN().toString();
@@ -27,77 +36,98 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
             return ctx.ID().toString();
         }
     }
+
+    /**
+     * Returns the symbol table
+     * @return The symbol table
+     */
     public SymbolTable getSymbolTable() {
         return symbolTable;
     }
 
+    /**
+     * Constructor for the Symbol Table Builder
+     * @param parser The MiniJavaGrammarParser
+     */
     public SymbolTableBuilder(MiniJavaGrammarParser parser) {
-        symbolTable = new SymbolTable();
         this.parser = parser;
     }
 
+    /**
+     * Creates a new program record in the symbol table
+     * @param ctx the parse tree
+     */
     @Override
     public void enterProgram(MiniJavaGrammarParser.ProgramContext ctx) {
-        // create a scope for the program
-        symbolTable.pushScope(new Scope("prog", "program"));
+        symbolTable = new SymbolTable();
     }
 
-
-    @Override
-    public void exitProgram(MiniJavaGrammarParser.ProgramContext ctx) {
-        symbolTable.popScope();
-    }
-
+    /**
+     * Adds the main class to the symbol table and sets the current class to
+     * the main class
+     * @param ctx the parse tree
+     */
     @Override
     public void enterMainclass(MiniJavaGrammarParser.MainclassContext ctx) {
         String id = ctx.ID(0).toString();
         String type = ctx.CLASS().toString();
         ClassRecord mainClass = new ClassRecord(id, type);
-        symbolTable.addClassToProgram(id, mainClass);
         currClass = mainClass;
-        Scope mainScope = new Scope(id, "class");
-        mainScope.setParent(symbolTable.getCurrentScope());
-        mainScope.setScopeClass(currClass);
-        symbolTable.pushScope(mainScope);
-        symbolTable.addRecord(id, currClass);
+        symbolTable.getProgram().pushClass(id, mainClass);
     }
 
+    /**
+     * Exists the main class and sets the current class to null
+     * @param ctx the parse tree
+     */
     @Override
     public void exitMainclass(MiniJavaGrammarParser.MainclassContext ctx) {
-        symbolTable.popScope();
+        currClass = null;
     }
 
+    /**
+     * Adds a new class to the symbol table and sets the current class
+     * to the new class
+     * @param ctx the parse tree
+     */
     @Override
     public void enterClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
         String id = ctx.ID(0).toString();
         String type = ctx.CLASS().toString();
-        if (symbolTable.getProgram().getClasses().get(id) != null) {
+        // Checks the class hasn't already been declared
+        if (symbolTable.findClass(id) != null) {
             printError("ERROR: Class name already exists");
         }
         ClassRecord newClass = new ClassRecord(id, type);
+        // Sets the superclass for the new class
         if (ctx.EXTENDS() != null) {
             newClass.setParentClass(ctx.ID(1).toString());
         }
-        symbolTable.addClassToProgram(id, newClass);
         currClass = newClass;
-        Scope classScope = new Scope(id, "class");
-        classScope.setParent(symbolTable.getCurrentScope());
-        classScope.setScopeClass(currClass);
-        symbolTable.pushScope(classScope);
-        symbolTable.addRecord(id, currClass);
+        symbolTable.getProgram().pushClass(id, newClass);
     }
 
+    /**
+     * Exits the class declaration and sets the current class to null
+     * @param ctx the parse tree
+     */
     @Override
     public void exitClassdecl(MiniJavaGrammarParser.ClassdeclContext ctx) {
-        symbolTable.popScope();
+        currClass = null;
     }
 
+    /**
+     * Adds a new variable to the symbol table
+     * @param ctx the parse tree
+     */
     @Override
     public void enterVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
         String id = ctx.ID().toString();
         String type = getVarType(ctx.type());
         VarRecord newVar = new VarRecord(id, type);
-        if (symbolTable.getCurrentScope().getType().equals("method")) {
+        // Checks if the current scope is a method
+        if (currMethod != null) {
+            // Checks if the current method already has a parameter or local variable of the same variable
             if (currMethod.getLocalVars().get(id) == null && currMethod.getParameters().get(id) == null) {
                 currMethod.pushLocalVar(id, newVar);
             }
@@ -106,6 +136,7 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
             }
         }
         else {
+            // Checks if current closs has a global variable of the same variable
             if (currClass.getGlobalVars().get(id) == null) {
                 currClass.pushGlobalVar(id, newVar);
             }
@@ -113,80 +144,63 @@ public class SymbolTableBuilder extends MiniJavaGrammarBaseListener {
                 printError("ERROR: Global variable already declared within class");
             }
         }
-        Scope varScope = new Scope(id, "variable");
-        varScope.setParent(symbolTable.getCurrentScope());
-        symbolTable.pushScope(varScope);
-        symbolTable.addRecord(id, newVar);
     }
 
-    @Override
-    public void exitVardecl(MiniJavaGrammarParser.VardeclContext ctx) {
-        symbolTable.popScope();
-    }
-
+    /**
+     * Enters a method declaration and sets the current method to the new method
+     * @param ctx the parse tree
+     */
     @Override
     public void enterMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
         String id = ctx.ID().toString();
         String type = getVarType(ctx.type());
+        // Checks if method already exists with the class
         if (currClass.getMethods().get(id) != null) {
             printError("ERROR: Method already defined within class");
         }
         currMethod = new MethodRecord(id, type);
         currClass.pushMethod(id, currMethod);
-        Scope methodScope = new Scope(id, "method");
-        methodScope.setParent(symbolTable.getCurrentScope());
-        methodScope.setScopeClass(currClass);
-        symbolTable.pushScope(methodScope);
-        symbolTable.addRecord(id, currMethod);
     }
 
+    /**
+     * Exists method declaration and sets current method to null
+     * @param ctx the parse tree
+     */
     @Override
     public void exitMethoddecl(MiniJavaGrammarParser.MethoddeclContext ctx) {
-        symbolTable.popScope();
+        currMethod = null;
     }
 
+    /**
+     * Enter method's formal parameters
+     * @param ctx the parse tree
+     */
     @Override
     public void enterFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
         String id = ctx.ID().toString();
         String type = getVarType(ctx.type());
+        // Checks if current method already contains parameter
         if (currMethod.getParameters().get(id) != null) {
             printError("Parameter already exists");
         }
         VarRecord newVar = new VarRecord(id, type);
-        if (symbolTable.findClass(newVar.getType()) != null) {
-            currMethod.pushParameter(id, newVar);
-        }
-        else {
-            currMethod.pushParameter(id, newVar);
-        }
-        Scope paramScope = new Scope(id, "param");
-        paramScope.setParent(symbolTable.getCurrentScope());
-        symbolTable.pushScope(paramScope);
-        symbolTable.addRecord(id, newVar);
+        currMethod.pushParameter(id, newVar);
     }
 
-    @Override
-    public void exitFormallist(MiniJavaGrammarParser.FormallistContext ctx) {
-        symbolTable.popScope();
-    }
-
+    /**
+     * Enter the rest of a method's formal parameters
+     * @param ctx the parse tree
+     */
     @Override
     public void enterFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
         String id = ctx.ID().toString();
         String type = getVarType(ctx.type());
+        // Checks if current method already contains parameter
         if (currMethod.getParameters().get(id) != null) {
             printError("ERROR: Parameter already exists");
         }
         VarRecord newVar = new VarRecord(id, type);
         currMethod.pushParameter(id, newVar);
-        Scope paramScope = new Scope(id, "param");
-        paramScope.setParent(symbolTable.getCurrentScope());
-        symbolTable.pushScope(paramScope);
-        symbolTable.addRecord(id, newVar);
-    }
-    @Override
-    public void exitFormalrest(MiniJavaGrammarParser.FormalrestContext ctx) {
-        symbolTable.popScope();
     }
 }
 

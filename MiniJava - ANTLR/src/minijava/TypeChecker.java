@@ -222,12 +222,14 @@ public class TypeChecker extends MiniJavaGrammarBaseListener {
                 // CHECK CLASS TYPES E.G ACCEPT METHOD IN TREEVISITOR
                 if (p.getObject() != null) {
                     if (!p.getObject().getId().equals(param)) {
-                        System.err.println("ERROR: Argument type \"" + p.getObject().getId() + "\" does not match \"" + param + "\"");
+                        if (!p.getObject().getParentClassId().equals(param)) {
+                            System.err.println("ERROR: Argument type \"" + p.getObject().getId() + "\" does not match parameter type \"" + param + "\"");
+                        }
                     }
                 }
                 else {
                     if (!t.equals(param)) {
-                        System.err.println("ERROR: Argument type \"" + t + "\" does not match \"" + param + "\"");
+                        System.err.println("ERROR: Argument type \"" + t + "\" does not match parameter type\"" + param + "\"");
                     }
                 }
             }

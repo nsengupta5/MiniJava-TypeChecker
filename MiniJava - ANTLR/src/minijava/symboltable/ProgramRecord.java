@@ -3,7 +3,7 @@ package minijava.symboltable;
 import java.util.Map;
 import java.util.HashMap;
 
-public class Program extends Record {
+public class ProgramRecord extends Record {
     private Map<String, ClassRecord> classes;
 
     /**
@@ -11,7 +11,7 @@ public class Program extends Record {
      * @param id The program's identifier
      * @param type The program's type
      */
-    public Program(String id, String type) {
+    public ProgramRecord(String id, String type) {
         super(id, type);
         classes = new HashMap<>();
     }

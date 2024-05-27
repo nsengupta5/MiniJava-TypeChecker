@@ -1,6 +1,6 @@
 class Foo {
 	public static void main(String[] a) {
-		System.out.println(new Lap().setIndexPlusOne(0));
+		System.out.println(0);
 	} 
 }
 

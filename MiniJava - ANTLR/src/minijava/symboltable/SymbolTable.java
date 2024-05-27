@@ -2,20 +2,20 @@ package minijava.symboltable;
 import java.util.Map;
 
 public class SymbolTable {
-	private Program program;
+	private ProgramRecord program;
 
 	/**
 	 * Constructor for the Symbol Table
 	 */
 	public SymbolTable() {
-		program = new Program("Prog", "Program");
+		program = new ProgramRecord("Prog", "Program");
 	}
 
 	/**
 	 * Returns the program record
 	 * @return The program record
 	 */
-	public Program getProgram() {
+	public ProgramRecord getProgram() {
 		return program;
 	}
 
